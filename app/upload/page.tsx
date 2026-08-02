@@ -21,12 +21,17 @@ export default function UploadPage() {
   const audioChunksRef = useRef<Blob[]>([])
 
   const handleFileSelect = async (file: File) => {
-    if (file.type.startsWith('audio/')) {
+    // Check by MIME type or file extension
+    const allowedExtensions = ['.mp3', '.wav', '.m4a', '.aac', '.ogg', '.flac', '.webm']
+    const isAudioByType = file.type.startsWith('audio/')
+    const isAudioByExtension = allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext))
+    
+    if (isAudioByType || isAudioByExtension) {
       setUploadedFile(file)
       setError(null)
       await uploadAudio(file)
     } else {
-      setError('Please select an audio file (MP3, WAV, M4A, etc.)')
+      setError('Please select an audio file (MP3, WAV, M4A, AAC, OGG, FLAC, WEBM)')
     }
   }
 

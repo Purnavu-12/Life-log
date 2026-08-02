@@ -222,3 +222,12 @@ INFO:     127.0.0.1:52959 - "GET /health HTTP/1.1" 200 OK
 INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
 INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
 INFO:     127.0.0.1:46401 - "GET /health HTTP/1.1" 200 OK
+ERROR:services.google:Error exchanging code: Token exchange failed: {
+  "error": "invalid_grant",
+  "error_description": "Missing code verifier."
+}
+ERROR:__main__:Google OAuth callback error: 400: Failed to exchange code: Token exchange failed: {
+  "error": "invalid_grant",
+  "error_description": "Missing code verifier."
+}
+INFO:     127.0.0.1:41696 - "GET /auth/google/callback?state=T8ytsOvPfHzU6AlRQ7JKkJx3kK6-TLtukrIdtWgF4CU&iss=https://accounts.google.com&code=4/0AXEQxIA9Ie1KTvp_PNnEwm04kmkI75iwyGCoMeu7Cg_E9h9wbWnkb2QeaEIRvXRvKuighw&scope=https://www.googleapis.com/auth/calendar HTTP/1.1" 400 Bad Request

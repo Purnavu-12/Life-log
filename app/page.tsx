@@ -1,30 +1,15 @@
 'use client'
 
-import { NeuralCore } from "@/components/chat/neural-core"
-import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, Mic, Search, Brain, Calendar } from "lucide-react"
+import { ArrowRight, Mic, Search, Brain, Calendar, MessageSquare } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import { useRouter } from "next/navigation"
 
 export default function Home() {
-  const [showChat, setShowChat] = useState(false)
   const { user, isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
-
-  // Optional: redirect authenticated users to dashboard
-  // Uncomment if you want to redirect logged-in users
-  // useEffect(() => {
-  //   if (isAuthenticated && !isLoading) {
-  //     router.push('/dashboard')
-  //   }
-  // }, [isAuthenticated, isLoading, router])
-
-  if (showChat) {
-    return <NeuralCore />
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
@@ -42,9 +27,12 @@ export default function Home() {
             <Link href="/upload">
               <Button size="sm">+ New Memory</Button>
             </Link>
-            <Button onClick={() => setShowChat(true)} size="sm" variant="outline">
-              Neural Core
-            </Button>
+            <Link href="/chat">
+              <Button size="sm" variant="outline">
+                <MessageSquare className="w-4 h-4 mr-1" />
+                Neural Core
+              </Button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -124,6 +112,23 @@ export default function Home() {
                 Automatically create calendar events and tasks from your memories.
               </CardContent>
             </Card>
+
+            <Link href="/chat" className="block">
+              <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <CardTitle className="text-lg">AI Chat Assistant</CardTitle>
+                      <CardDescription>Ask questions about your memories</CardDescription>
+                    </div>
+                    <MessageSquare className="w-5 h-5 text-primary" />
+                  </div>
+                </CardHeader>
+                <CardContent className="text-sm text-muted-foreground">
+                  Chat with Neural Core AI to search and retrieve information from your audio memories.
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </section>
