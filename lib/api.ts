@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8006'
 
 interface ApiResponse<T> {
   success?: boolean
@@ -403,6 +403,16 @@ export class LifeLogApi {
   getGoogleAuthUrl(scopes: string[] = []): string {
     const scopeParam = scopes.length > 0 ? `&scope=${scopes.join('&scope=')}` : ''
     return `${this.baseUrl}/auth/google?${scopeParam}`
+  }
+
+  /**
+   * Exchange Google OAuth code for tokens (callback step)
+   */
+  async exchangeGoogleCode(code: string, state: string): Promise<{ success: boolean; message: string; email?: string; error?: string }> {
+    return this.request<{ success: boolean; message: string; email?: string; error?: string }>(
+      'GET',
+      `/auth/google/callback?code=${code}&state=${state}`
+    )
   }
 
   /**

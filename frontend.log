@@ -413,3 +413,494 @@ Caused by:
 Import trace for requested module:
 ./lib/api.ts
 ./app/dashboard/page.tsx
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/next-devtools/userspace/app/segment-explorer-node.js#SegmentViewNode" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '3780789714'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/client/components/layout-router.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1127246017'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/client/components/render-from-template-context.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1372371969'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/components/theme-provider.tsx#ThemeProvider" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '1842040927'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/context/AuthContext.tsx#AuthProvider" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '2143161663'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/client/components/layout-router.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '2933657599'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/client/components/render-from-template-context.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '4180080127'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/next-devtools/userspace/app/segment-explorer-node.js#SegmentViewNode" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '746436639'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/next-devtools/userspace/app/segment-explorer-node.js#SegmentViewNode" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '746436639'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/next-devtools/userspace/app/segment-explorer-node.js#SegmentViewNode" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '746436639'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/@vercel+analytics@1.3.1_nex_26dcdbbb9696662ca3d0e3789bbd301a/node_modules/@vercel/analytics/dist/next/index.mjs#Analytics" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '3429312959'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/next-devtools/userspace/app/segment-explorer-node.js#SegmentViewNode" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '3780789714'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/client/components/client-page.js#ClientPageRoot" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '3159128818'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/app/page.tsx#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '550768030'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/lib/framework/boundary-components.js#OutletBoundary" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '2818061311'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/lib/framework/boundary-components.js#ViewportBoundary" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '2881363839'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/lib/framework/boundary-components.js#MetadataBoundary" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '2994585087'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/client/components/builtin/global-error.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '3651406642'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/next-devtools/userspace/app/segment-explorer-node.js#SegmentViewNode" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '3780789714'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/lib/metadata/generate/icon-mark.js#IconMark" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '1202092759'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/lib/framework/boundary-components.js#ViewportBoundary" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '2881363839'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/lib/framework/boundary-components.js#MetadataBoundary" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: '2994585087'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/client/components/builtin/global-error.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '3651406642'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/next-devtools/userspace/app/segment-explorer-node.js#SegmentViewNode" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '3780789714'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[0m[7m Server [0m Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/client/components/builtin/global-error.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>:1:18) {
+  environmentName: 'Server',
+  digest: '3651406642'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/esm/lib/metadata/generate/icon-mark.js#IconMark" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>) {
+  digest: '1202092759'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/client/components/builtin/global-error.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>:1:18) {
+  environmentName: 'Server',
+  digest: '3651406642'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\compiled\next-server\app-page-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: Could not find the module "[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b/node_modules/next/dist/client/components/builtin/global-error.js#default" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>:1:18) {
+  environmentName: 'Server',
+  digest: '3651406642',
+  page: '/'
+}
+ GET / 500 in 1848ms (compile: 1738ms, render: 110ms)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\9.pack.gz'
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require-hook.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\.next\dev\server\webpack-runtime.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\vendor-chunks\lucide-react@0.454.0_react@19.2.0.js'
+    at __webpack_require__.f.require (D:\Life-log\.next\dev\server\webpack-runtime.js:190:28)
+    at <unknown> (D:\Life-log\.next\dev\server\webpack-runtime.js:103:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (D:\Life-log\.next\dev\server\webpack-runtime.js:102:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (D:\Life-log\.next\dev\server\webpack-runtime.js:154:22)
+    at <unknown> (D:\Life-log\.next\dev\server\app\page.js:485:47)
+    at Object.<anonymous> (D:\Life-log\.next\dev\server\app\page.js:488:3) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\vendor-chunks\\lucide-react@0.454.0_react@19.2.0.js',
+  page: '/'
+}
+ GET / 500 in 426ms
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require-hook.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\.next\dev\server\webpack-runtime.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\vendor-chunks\lucide-react@0.454.0_react@19.2.0.js'
+    at __webpack_require__.f.require (D:\Life-log\.next\dev\server\webpack-runtime.js:190:28)
+    at <unknown> (D:\Life-log\.next\dev\server\webpack-runtime.js:103:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (D:\Life-log\.next\dev\server\webpack-runtime.js:102:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (D:\Life-log\.next\dev\server\webpack-runtime.js:154:22)
+    at <unknown> (D:\Life-log\.next\dev\server\app\page.js:485:47)
+    at Object.<anonymous> (D:\Life-log\.next\dev\server\app\page.js:488:3) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\vendor-chunks\\lucide-react@0.454.0_react@19.2.0.js',
+  page: '/'
+}
+ GET / 500 in 62ms (compile: 55ms, render: 7ms)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require-hook.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\.next\dev\server\webpack-runtime.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\vendor-chunks\lucide-react@0.454.0_react@19.2.0.js'
+    at __webpack_require__.f.require (D:\Life-log\.next\dev\server\webpack-runtime.js:190:28)
+    at <unknown> (D:\Life-log\.next\dev\server\webpack-runtime.js:103:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (D:\Life-log\.next\dev\server\webpack-runtime.js:102:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (D:\Life-log\.next\dev\server\webpack-runtime.js:154:22)
+    at <unknown> (D:\Life-log\.next\dev\server\app\page.js:485:47)
+    at Object.<anonymous> (D:\Life-log\.next\dev\server\app\page.js:488:3) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\vendor-chunks\\lucide-react@0.454.0_react@19.2.0.js',
+  page: '/'
+}
+ GET / 500 in 347ms
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require-hook.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\.next\dev\server\webpack-runtime.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\vendor-chunks\lucide-react@0.454.0_react@19.2.0.js'
+    at __webpack_require__.f.require (D:\Life-log\.next\dev\server\webpack-runtime.js:190:28)
+    at <unknown> (D:\Life-log\.next\dev\server\webpack-runtime.js:103:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (D:\Life-log\.next\dev\server\webpack-runtime.js:102:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (D:\Life-log\.next\dev\server\webpack-runtime.js:154:22)
+    at <unknown> (D:\Life-log\.next\dev\server\app\page.js:485:47)
+    at Object.<anonymous> (D:\Life-log\.next\dev\server\app\page.js:488:3) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\vendor-chunks\\lucide-react@0.454.0_react@19.2.0.js',
+  page: '/'
+}
+ GET / 500 in 52ms (compile: 43ms, render: 9ms)
+[Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\1.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\1.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\1.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\1.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\1.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\1.pack.gz'
+}
+[Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\9.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\9.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\9.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\9.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\9.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\9.pack.gz'
+}
+[Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\11.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\11.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\11.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\11.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\11.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\client-development\\11.pack.gz'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\client-development\1.pack.gz'
+[Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\server-development\0.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\server-development\\0.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\server-development\0.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\server-development\\0.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\server-development\0.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'D:\\Life-log\\.next\\dev\\cache\\webpack\\server-development\\0.pack.gz'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, stat 'D:\Life-log\.next\dev\cache\webpack\server-development\0.pack.gz'
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-manifest.external.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\app-paths-manifest.json'
+    at ignore-listed frames {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\app-paths-manifest.json',
+  page: '/'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-manifest.external.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\pages-manifest.json'
+    at ignore-listed frames {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\pages-manifest.json'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-manifest.external.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\app-paths-manifest.json'
+    at ignore-listed frames {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\app-paths-manifest.json',
+  page: '/'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-manifest.external.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\trace\tracer.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\pages-manifest.json'
+    at ignore-listed frames {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\pages-manifest.json'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require-hook.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\load-default-error-components.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+Error: ENOENT: no such file or directory, open 'D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\pages\_document.js'
+    at ignore-listed frames {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\node_modules\\.pnpm\\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\\node_modules\\next\\dist\\pages\\_document.js'
+}
+ GET / 500 in 113ms
+ GET / 500 in 113ms
+ ⨯ Module not found: Error: Can't resolve 'next-flight-client-entry-loader' in 'D:\Life-log'
+ ⨯ Module not found: Error: Can't resolve 'next-flight-client-entry-loader' in 'D:\Life-log'
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require-hook.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\middleware-manifest.json'
+    at ignore-listed frames {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\middleware-manifest.json'
+}
+ ⨯ Module not found: Error: Can't resolve 'next-flight-client-entry-loader' in 'D:\Life-log'
+ ○ Compiling /_error ...
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require-hook.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\middleware-manifest.json'
+    at ignore-listed frames {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\middleware-manifest.json'
+}
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\require-hook.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+ ⨯ Error: ENOENT: no such file or directory, open 'D:\Life-log\.next\dev\server\middleware-manifest.json'
+    at ignore-listed frames {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'D:\\Life-log\\.next\\dev\\server\\middleware-manifest.json'
+}
+ ⚠ Found a change in next.config.mjs. Restarting the server to apply the changes...
+node:internal/modules/cjs/loader:1424
+  throw err;
+  ^
+
+Error: Cannot find module 'D:\Life-log\node_modules\.pnpm\next@16.0.10_@babel+core@7._d2d2da93188d232dc23c52277deb2b9b\node_modules\next\dist\server\lib\start-server.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1421:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1059:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1064:22)
+    at Module._load (node:internal/modules/cjs/loader:1227:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v24.12.0
+[?25h

@@ -56,3 +56,169 @@ INFO:services.search:Stored memory: 08029e3c-2ac4-4f34-8724-636bae59efbb
 INFO:__main__:Stored memory: 08029e3c-2ac4-4f34-8724-636bae59efbb for user: local-user
 INFO:database.memory_crud:Created memory: 86a148b4-375f-4793-adde-f1b571ca5533 for user: local-user
 INFO:     127.0.0.1:36070 - "POST /api/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22906 - "OPTIONS /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41827 - "OPTIONS /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56840 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56840 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:__main__:Processing audio for user local-user: ElevenLabs_2026-06-16T10_44_38_David - Deep, Warm, Narration_pvc_sp100_s50_sb75_v3.mp3
+INFO:services.transcription:Local Whisper transcription successful: 725 characters
+INFO:__main__:Transcribed audio: 725 characters
+INFO:httpx:HTTP Request: POST https://inference.poolside.ai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:services.extraction:Extraction successful: {'summary': "Introduction to Pernasi, a multi-talented individual with interests in dance, music, theater, movies, and content creation. Recently developed an interest in technology and coding, completing his first year of BTEC. His journey from beginner to exploring coding, AI development, and other tech areas is highlighted, emphasizing his 'jack of all trades' approach.", 'tasks': ['Explore coding', 'Explore AI development', 'Discover new technology rabbit holes'], 'people': ['Pernasi'], 'dates': ['first year of BTEC'], 'topics': ['Technology', 'Coding', 'AI development', 'BTEC education', 'Content creation', 'Dance', 'Music', 'Theater', 'Movies'], 'tags': ['beginner', 'jack-of-all-trades', 'tech-journey', 'coding', 'AI', 'BTEC', 'content-creation'], 'sentiment': 'positive', 'action_items': ["Follow along with Pernasi's coding and AI development journey", 'Explore multiple technology areas as Pernasi discovers them']}
+INFO:__main__:Extracted information: {'summary': "Introduction to Pernasi, a multi-talented individual with interests in dance, music, theater, movies, and content creation. Recently developed an interest in technology and coding, completing his first year of BTEC. His journey from beginner to exploring coding, AI development, and other tech areas is highlighted, emphasizing his 'jack of all trades' approach.", 'tasks': ['Explore coding', 'Explore AI development', 'Discover new technology rabbit holes'], 'people': ['Pernasi'], 'dates': ['first year of BTEC'], 'topics': ['Technology', 'Coding', 'AI development', 'BTEC education', 'Content creation', 'Dance', 'Music', 'Theater', 'Movies'], 'tags': ['beginner', 'jack-of-all-trades', 'tech-journey', 'coding', 'AI', 'BTEC', 'content-creation'], 'sentiment': 'positive', 'action_items': ["Follow along with Pernasi's coding and AI development journey", 'Explore multiple technology areas as Pernasi discovers them']}
+INFO:services.search:Stored memory: 1a1fc9d3-8e22-4653-8820-3ddefa9ff04b
+INFO:__main__:Stored memory: 1a1fc9d3-8e22-4653-8820-3ddefa9ff04b for user: local-user
+INFO:database.memory_crud:Created memory: 0986ded7-5934-467c-b963-151b70fc72ca for user: local-user
+INFO:     127.0.0.1:15554 - "POST /api/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:11069 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44587 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16069 - "OPTIONS /api/google/events?calendar_id=primary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:8837 - "OPTIONS /api/google/freebusy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:30620 - "OPTIONS /api/google/events?calendar_id=primary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43041 - "OPTIONS /api/google/freebusy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60763 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:35922 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60763 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:35922 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:__main__:Redirecting to Google OAuth: https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=233683667344-5ppgdpggatpi0sbs8avecpij6n3s5n0b.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fgoogle%2Fcallback&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&state=DI4y3fLst0ZjI1GLkGU8ioLt5iDt8W&code_challenge=1P5pdQEJMvLdA1g-vkM9UivN0GEDjDmLULIhXGT9c1M&code_challenge_method=S256&access_type=offline&include_granted_scopes=true&prompt=consent
+INFO:     127.0.0.1:35922 - "GET /auth/google?&scope=calendar HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:38174 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20821 - "OPTIONS /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41976 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50480 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50480 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15555 - "OPTIONS /api/google/events?calendar_id=primary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15555 - "OPTIONS /api/google/freebusy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50480 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:15555 - "OPTIONS /api/google/events?calendar_id=primary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50480 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:15555 - "OPTIONS /api/google/freebusy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50480 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50480 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:__main__:Redirecting to Google OAuth: https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=233683667344-5ppgdpggatpi0sbs8avecpij6n3s5n0b.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fgoogle%2Fcallback&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&state=D4IUJROZQEFU589lFk89LLix2mnN9T&code_challenge=o75pll8Fk_QbQNvL5BbQ_hiBcIjOGnhirwkyL_ufiCE&code_challenge_method=S256&access_type=offline&include_granted_scopes=true&prompt=consent
+INFO:     127.0.0.1:50480 - "GET /auth/google?&scope=calendar HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:50480 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29727 - "OPTIONS /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29444 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29727 - "OPTIONS /api/google/events?calendar_id=primary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15765 - "OPTIONS /api/google/freebusy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29727 - "OPTIONS /api/google/events?calendar_id=primary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:8160 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:29444 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:8160 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:29444 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:__main__:Redirecting to Google OAuth: https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=233683667344-5ppgdpggatpi0sbs8avecpij6n3s5n0b.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fgoogle%2Fcallback&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&state=g2bGjXEzIr8a9FYFPgBU0WILACwa0e&code_challenge=ij2xD1kRHGC96S5xzsyNM5-4jm3vfA8H5fvhxGonGjY&code_challenge_method=S256&access_type=offline&include_granted_scopes=true&prompt=consent
+INFO:     127.0.0.1:29444 - "GET /auth/google?&scope=calendar HTTP/1.1" 307 Temporary Redirect
+ERROR:services.google:Error exchanging code: Token exchange failed: {
+  "error": "invalid_grant",
+  "error_description": "Missing code verifier."
+}
+ERROR:__main__:Google OAuth callback error: 400: Failed to exchange code: Token exchange failed: {
+  "error": "invalid_grant",
+  "error_description": "Missing code verifier."
+}
+INFO:     127.0.0.1:15951 - "GET /auth/google/callback?state=g2bGjXEzIr8a9FYFPgBU0WILACwa0e&iss=https://accounts.google.com&code=4/0AXEQxIB_tvQQKxKihZsCOmLxREuSyrb8cZ7i4GkBz47g0AHRg1vELr2EF4F_22N15AlGgg&scope=https://www.googleapis.com/auth/calendar HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:15951 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:22367 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28177 - "OPTIONS /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28426 - "OPTIONS /api/actions/counts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28054 - "OPTIONS /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65091 - "OPTIONS /api/actions/counts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22367 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:26284 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:22367 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:26284 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:26284 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:22367 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65091 - "OPTIONS /api/google/messages/important?max_results=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28054 - "OPTIONS /api/google/messages/important?max_results=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22367 - "GET /api/google/messages/important?max_results=10 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:22367 - "GET /api/google/messages/important?max_results=10 HTTP/1.1" 401 Unauthorized
+INFO:__main__:Redirecting to Google OAuth: https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=233683667344-5ppgdpggatpi0sbs8avecpij6n3s5n0b.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fauth%2Fgoogle%2Fcallback&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly&state=pDzCtEFHhCN9u6DIK1xRV0dp3DLnRO&code_challenge=EcQ0tzGnkrDWPq1C9-oCRcQbsi_L5dcOQ1rsjIpB5wk&code_challenge_method=S256&access_type=offline&include_granted_scopes=true&prompt=consent
+INFO:     127.0.0.1:22367 - "GET /auth/google?&scope=gmail HTTP/1.1" 307 Temporary Redirect
+ERROR:services.google:Error exchanging code: Token exchange failed: {
+  "error": "invalid_grant",
+  "error_description": "Missing code verifier."
+}
+ERROR:__main__:Google OAuth callback error: 400: Failed to exchange code: Token exchange failed: {
+  "error": "invalid_grant",
+  "error_description": "Missing code verifier."
+}
+INFO:     127.0.0.1:63009 - "GET /auth/google/callback?state=pDzCtEFHhCN9u6DIK1xRV0dp3DLnRO&iss=https://accounts.google.com&code=4/0AXEQxIBDu4OzCeZgiGDxH286825fEhYqqdqNLdG5D8M61ZwD2rjQf-azshqjjpZaCV46fg&scope=https://www.googleapis.com/auth/gmail.readonly HTTP/1.1" 400 Bad Request
+ERROR:services.google:Error exchanging code: Token exchange failed: {
+  "error": "invalid_grant",
+  "error_description": "Missing code verifier."
+}
+ERROR:__main__:Google OAuth callback error: 400: Failed to exchange code: Token exchange failed: {
+  "error": "invalid_grant",
+  "error_description": "Missing code verifier."
+}
+INFO:     127.0.0.1:63227 - "GET /auth/google/callback?state=pDzCtEFHhCN9u6DIK1xRV0dp3DLnRO&iss=https://accounts.google.com&code=4/0AXEQxIDdgLFu0us_RqCIkyWQIhHZ5dz9NxE6l795nqTNDRW8ZBkn0H5il8ee-sgmwxyMwQ&scope=https://www.googleapis.com/auth/gmail.readonly HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:44128 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60082 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60082 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64103 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64103 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41177 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41177 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41177 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:14016 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58525 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:14016 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58525 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55496 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55496 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55496 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55496 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55496 - "GET /api/google/messages/important?max_results=10 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55496 - "GET /api/google/messages/important?max_results=10 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55496 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:21248 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55496 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:21248 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:21248 - "GET /api/memories?limit=10&offset=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:3427 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:25870 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:3427 - "GET /api/google/freebusy HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:25870 - "GET /api/google/events?calendar_id=primary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:25870 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:3427 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:25870 - "GET /api/actions?status=pending&limit=20&offset=0 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:3427 - "GET /api/actions/counts HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:3427 - "GET /api/google/messages/important?max_results=10 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:3427 - "GET /api/google/messages/important?max_results=10 HTTP/1.1" 401 Unauthorized
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:58066 - "GET /health HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:43494 - "GET /health HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:15461 - "GET /health HTTP/1.1" 200 OK
+ERROR:__main__:Error processing upload: 400: File must be an audio file
+INFO:     127.0.0.1:27619 - "POST /api/upload HTTP/1.1" 500 Internal Server Error
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:3298 - "GET /health HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:3307 - "GET /health HTTP/1.1" 200 OK
+ERROR:__main__:Error processing upload: 400: File must be an audio file
+INFO:     127.0.0.1:3315 - "POST /api/upload HTTP/1.1" 500 Internal Server Error
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:52920 - "GET /health HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:52927 - "GET /health HTTP/1.1" 200 OK
+ERROR:__main__:Error processing upload: 400: File must be an audio file
+INFO:     127.0.0.1:52934 - "POST /api/upload HTTP/1.1" 500 Internal Server Error
+ERROR:__main__:Error processing upload: 400: File must be an audio file
+INFO:     127.0.0.1:52939 - "POST /api/upload HTTP/1.1" 500 Internal Server Error
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:52959 - "GET /health HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:46401 - "GET /health HTTP/1.1" 200 OK

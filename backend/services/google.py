@@ -15,6 +15,9 @@ from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import httpx
+import secrets
+import hashlib
+import base64
 
 from models.google import GoogleCredentials, GoogleTokenResponse, GoogleUserInfo
 from database import get_google_credentials, save_google_credentials, delete_google_credentials
@@ -52,6 +55,22 @@ class GoogleOAuthService:
         
         # Initialize OAuth flow
         self.flow = self._create_flow()
+        
+        # Store code verifiers for PKCE (in production, use Redis or database)
+        # Format: {state: code_verifier}
+        self.code_verifiers = {}
+
+    def _generate_pkce_pair(self) -> tuple:
+        """Generate PKCE code verifier and code challenge"""
+        # Generate a random code verifier
+        code_verifier = secrets.token_urlsafe(96)
+        
+        # Create code challenge by SHA-256 hashing the verifier
+        code_challenge = base64.urlsafe_b64encode(
+            hashlib.sha256(code_verifier.encode()).digest()
+        ).decode().rstrip("=")
+        
+        return code_verifier, code_challenge
     
     def _create_flow(self, scopes: List[str] = None):
         """Create OAuth flow with specified scopes"""
@@ -80,12 +99,20 @@ class GoogleOAuthService:
         )
     
     def get_authorization_url(self, state: str = None, scopes: List[str] = None) -> str:
-        """Generate Google OAuth authorization URL"""
+        """Generate Google OAuth authorization URL with PKCE"""
         if not self.flow:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Google OAuth not configured"
             )
+        
+        # Generate PKCE pair
+        code_verifier, code_challenge = self._generate_pkce_pair()
+        
+        # Store code verifier with state (or generate state if not provided)
+        if not state:
+            state = secrets.token_urlsafe(32)
+        self.code_verifiers[state] = code_verifier
         
         if scopes:
             flow = self._create_flow(scopes)
@@ -96,12 +123,14 @@ class GoogleOAuthService:
             access_type="offline",
             include_granted_scopes="true",
             prompt="consent",
-            state=state
+            state=state,
+            code_challenge=code_challenge,
+            code_challenge_method="S256"
         )
         return authorization_url
     
-    async def exchange_code_for_token(self, code: str) -> GoogleCredentials:
-        """Exchange authorization code for access token"""
+    async def exchange_code_for_token(self, code: str, state: str = None) -> GoogleCredentials:
+        """Exchange authorization code for access token with PKCE"""
         if not self.flow:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -109,8 +138,14 @@ class GoogleOAuthService:
             )
         
         try:
+            # Get the code verifier from storage
+            code_verifier = self.code_verifiers.get(state)
+            if not code_verifier and state:
+                # Try to find by state
+                code_verifier = self.code_verifiers.pop(state, None)
+            
             # Manually exchange code (Flow.fetch_token is synchronous)
-            token_data = self._exchange_code(code)
+            token_data = self._exchange_code(code, code_verifier)
             
             # Get user info
             user_info = await self._get_user_info(token_data["access_token"])
@@ -135,8 +170,8 @@ class GoogleOAuthService:
                 detail=f"Failed to exchange code: {str(e)}"
             )
     
-    def _exchange_code(self, code: str) -> Dict[str, Any]:
-        """Exchange code for token using HTTP request"""
+    def _exchange_code(self, code: str, code_verifier: str = None) -> Dict[str, Any]:
+        """Exchange code for token using HTTP request with PKCE"""
         
         data = {
             "code": code,
@@ -145,6 +180,10 @@ class GoogleOAuthService:
             "redirect_uri": self.redirect_uri,
             "grant_type": "authorization_code"
         }
+        
+        # Add PKCE code verifier if available
+        if code_verifier:
+            data["code_verifier"] = code_verifier
         
         response = requests.post(
             "https://oauth2.googleapis.com/token",

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,7 +9,7 @@ import { Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 import { api } from '@/lib/api'
 import { useAuth } from '@/context/AuthContext'
 
-export default function GoogleCallbackPage() {
+function GoogleCallbackContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, isAuthenticated } = useAuth()
@@ -38,33 +38,26 @@ export default function GoogleCallbackPage() {
       try {
         // First, we need to get the tokens from the backend
         // The backend /auth/google/callback endpoint handles the OAuth flow
-        // But we need a way to pass the code to the backend and get tokens back
-        
-        // Since this is a frontend page, we'll exchange the code directly
-        // The backend will return the Google user info, then we connect it
-        
-        // For now, we'll show instructions since the flow needs backend support
-        // In production, you would:
-        // 1. Exchange code for tokens on backend
-        // 2. Get Google user info
-        // 3. Connect to current user
         
         // Show loading while we wait for the backend to process
         setStatus('loading')
         setMessage('Connecting to Google...')
 
-        // In a real implementation, you would call:
-        // const response = await fetch(`/api/auth/google/callback?code=${code}&state=${state}`)
-        // But we need the backend to handle this
+        // Call the backend to exchange code for tokens
+        const response = await api.exchangeGoogleCode(code, state || '')
         
-        // For now, redirect to settings with a message
-        setTimeout(() => {
-          if (!isAuthenticated) {
-            router.push('/auth/login?from=google')
-            return
-          }
-          router.push('/settings?google=connecting')
-        }, 2000)
+        if (response.success) {
+          setStatus('success')
+          setMessage(`Connected Google account: ${response.email}`)
+          setEmail(response.email || '')
+          
+          // Redirect to settings after successful connection
+          setTimeout(() => {
+            router.push('/settings?google=connected')
+          }, 2000)
+        } else {
+          throw new Error(response.error || response.message || 'Failed to connect Google')
+        }
 
       } catch (err) {
         setStatus('error')
@@ -146,5 +139,13 @@ export default function GoogleCallbackPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function GoogleCallbackPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center p-4"><Loader2 className="w-12 h-12 mx-auto animate-spin text-primary" /></div>}>
+      <GoogleCallbackContent />
+    </Suspense>
   )
 }

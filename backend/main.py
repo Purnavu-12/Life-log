@@ -550,17 +550,20 @@ async def google_login(request: Request):
 async def google_callback(request: Request, code: str, state: str = None):
     """Google OAuth callback handler"""
     try:
-        # Exchange code for token
-        credentials = await google_oauth_service.exchange_code_for_token(code)
+        # Exchange code for token (with PKCE state)
+        credentials = await google_oauth_service.exchange_code_for_token(code, state)
         
-        # For now, we need to associate this with a user
-        # In production, you'd store the state with user_id or have user logged in first
-        # For simplicity, we'll return the credentials and let frontend handle
-        # Or we can have the user already authenticated and pass user_id in state
+        # Associate with local user for development
+        # In production, extract user_id from state parameter
+        user_id = LOCAL_USER_ID
         
-        logger.info(f"Google OAuth callback successful for: {credentials.email}")
+        # Save credentials to database
+        credentials.user_id = user_id
+        saved_creds = google_oauth_service.save_credentials(credentials, user_id)
         
-        # Return success - frontend will handle storing with user
+        logger.info(f"Google OAuth callback successful for user {user_id}: {credentials.email}")
+        
+        # Return success
         return JSONResponse(
             status_code=200,
             content={
@@ -568,7 +571,7 @@ async def google_callback(request: Request, code: str, state: str = None):
                 "email": credentials.email,
                 "google_user_id": credentials.google_user_id,
                 "scopes": credentials.scopes,
-                "message": "Google OAuth successful. Please complete setup in your account settings."
+                "message": "Google OAuth successful. Your Google account has been connected."
             }
         )
     except Exception as e:
@@ -1574,8 +1577,15 @@ async def upload_audio(
     - Store in vector database
     """
     try:
-        if not file.content_type.startswith("audio/"):
-            raise HTTPException(status_code=400, detail="File must be an audio file")
+        # Check content type or file extension
+        ALLOWED_AUDIO_TYPES = ["audio/", ".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"]
+        is_audio_by_content_type = file.content_type.startswith("audio/") if file.content_type else False
+        is_audio_by_extension = any(file.filename.lower().endswith(ext) for ext in [".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"])
+        
+        logger.info(f"File upload: filename={file.filename}, content_type={file.content_type}, by_extension={is_audio_by_extension}, by_content_type={is_audio_by_content_type}")
+        
+        if not (is_audio_by_content_type or is_audio_by_extension):
+            raise HTTPException(status_code=400, detail="File must be an audio file (mp3, wav, m4a, aac, ogg, flac)")
 
         logger.info(f"Processing audio for user {current_user.id}: {file.filename}")
 
