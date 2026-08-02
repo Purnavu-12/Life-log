@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,13 +8,34 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, CheckCircle } from 'lucide-react'
+import { Loader2, CheckCircle, Calendar, Mail, Link2, Unlink2 } from 'lucide-react'
+import { LifeLogApi, api } from '@/lib/api'
 
 export default function SettingsPage() {
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [autoCreate, setAutoCreate] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [googleStatus, setGoogleStatus] = useState<{
+    connected: boolean
+    email?: string
+    scopes?: string[]
+  } | null>(null)
+  const [connecting, setConnecting] = useState(false)
+  const [googleError, setGoogleError] = useState<string | null>(null)
+
+  // Check Google connection status
+  useEffect(() => {
+    const checkGoogleStatus = async () => {
+      try {
+        const status = await api.getGoogleStatus()
+        setGoogleStatus(status)
+      } catch (err: any) {
+        setGoogleError(err?.message || 'Failed to check Google status')
+      }
+    }
+    checkGoogleStatus()
+  }, [])
 
   const handleSave = async () => {
     setSaving(true)
@@ -24,6 +45,43 @@ export default function SettingsPage() {
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     }, 1000)
+  }
+
+  const handleConnectGoogle = async () => {
+    try {
+      setConnecting(true)
+      setGoogleError(null)
+      
+      // Open Google OAuth in new window
+      const scopes = ['calendar', 'gmail']
+      const authUrl = api.getGoogleAuthUrl(scopes)
+      window.location.href = authUrl
+    } catch (err: any) {
+      setGoogleError(err?.message || 'Failed to connect Google')
+      setConnecting(false)
+    }
+  }
+
+  const handleDisconnectGoogle = async () => {
+    try {
+      setConnecting(true)
+      setGoogleError(null)
+      
+      // Use the API client method
+      const apiRes = await api.disconnectGoogle()
+      
+      if (apiRes.success) {
+        // Refresh status
+        const status = await api.getGoogleStatus()
+        setGoogleStatus(status)
+      } else {
+        setGoogleError(apiRes.message || 'Failed to disconnect')
+      }
+    } catch (err: any) {
+      setGoogleError(err?.message || 'Failed to disconnect Google')
+    } finally {
+      setConnecting(false)
+    }
   }
 
   return (
@@ -94,35 +152,128 @@ export default function SettingsPage() {
                 <CardDescription>Manage your integrations</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                {googleError && (
+                  <Alert className="bg-red-50 border-red-200 text-red-700 mb-4">
+                    <AlertDescription>{googleError}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Google Calendar */}
                 <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-semibold">Google Calendar</h3>
-                    <p className="text-sm text-muted-foreground">Sync with your calendar</p>
+                  <div className="flex items-center gap-4">
+                    <Calendar className="w-8 h-8 text-blue-500" />
+                    <div>
+                      <h3 className="font-semibold">Google Calendar</h3>
+                      <p className="text-sm text-muted-foreground">Sync with your calendar</p>
+                    </div>
                   </div>
-                  <Button size="sm" variant="outline">
-                    Connect
+                  {googleStatus?.connected ? (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleDisconnectGoogle}
+                      disabled={connecting}
+                    >
+                      {connecting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Unlink2 className="w-4 h-4 mr-2" />
+                          Disconnect
+                        </>
+                      )}
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      onClick={handleConnectGoogle}
+                      disabled={connecting}
+                    >
+                      {connecting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Link2 className="w-4 h-4 mr-2" />
+                          Connect
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+
+                {/* Gmail */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <Mail className="w-8 h-8 text-red-500" />
+                    <div>
+                      <h3 className="font-semibold">Gmail</h3>
+                      <p className="text-sm text-muted-foreground">Index your emails</p>
+                    </div>
+                  </div>
+                  {googleStatus?.connected ? (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleDisconnectGoogle}
+                      disabled={connecting}
+                    >
+                      {connecting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Unlink2 className="w-4 h-4 mr-2" />
+                          Disconnect
+                        </>
+                      )}
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      onClick={handleConnectGoogle}
+                      disabled={connecting}
+                    >
+                      {connecting ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Link2 className="w-4 h-4 mr-2" />
+                          Connect
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+
+                {/* Slack */}
+                <div className="flex items-center justify-between p-4 border rounded-lg opacity-50">
+                  <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center">
+                      <span className="text-sm font-bold">S</span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Slack</h3>
+                      <p className="text-sm text-muted-foreground">Connect your workspace</p>
+                    </div>
+                  </div>
+                  <Button size="sm" variant="outline" disabled>
+                    Coming Soon
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-semibold">Gmail</h3>
-                    <p className="text-sm text-muted-foreground">Index your emails</p>
-                  </div>
-                  <Button size="sm" variant="outline">
-                    Connect
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div>
-                    <h3 className="font-semibold">Slack</h3>
-                    <p className="text-sm text-muted-foreground">Connect your workspace</p>
-                  </div>
-                  <Button size="sm" variant="outline">
-                    Connect
-                  </Button>
-                </div>
+                {/* Connection Info */}
+                {googleStatus?.connected && (
+                  <Alert className="bg-green-50 border-green-200 text-green-700">
+                    <CheckCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      Connected to Google as {googleStatus.email}
+                      {googleStatus.scopes && googleStatus.scopes.length > 0 && (
+                        <span className="block text-sm mt-1">
+                          Scopes: {googleStatus.scopes.join(', ')}
+                        </span>
+                      )}
+                    </AlertDescription>
+                  </Alert>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

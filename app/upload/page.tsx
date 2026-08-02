@@ -1,13 +1,16 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Upload, Mic, Loader2, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
+import { api } from '@/lib/api'
+import { useRouter } from 'next/navigation'
 
 export default function UploadPage() {
+  const router = useRouter()
   const [isRecording, setIsRecording] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
@@ -30,24 +33,19 @@ export default function UploadPage() {
   const uploadAudio = async (file: File) => {
     setIsUploading(true)
     try {
-      const formData = new FormData()
-      formData.append('audio', file)
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        throw new Error('Upload failed')
+      // Use the API client
+      const response = await api.uploadAudio(file)
+      
+      if (!response.success) {
+        throw new Error(response.error || 'Upload failed')
       }
 
       setUploadComplete(true)
       setTimeout(() => {
-        window.location.href = '/dashboard'
+        router.push('/dashboard')
       }, 2000)
     } catch (err) {
-      setError('Failed to upload audio. Please try again.')
+      setError(err.message || 'Failed to upload audio. Please try again.')
       setIsUploading(false)
     }
   }

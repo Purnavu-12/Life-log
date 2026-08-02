@@ -6,53 +6,53 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, Search, Zap, User, Clock, FileText } from 'lucide-react'
+import { Calendar, Search, Zap, User, Clock, Mail, FileText } from 'lucide-react'
 import Link from 'next/link'
+import { api } from '@/lib/api'
+import CalendarTab from '@/components/calendar-tab'
+import MailTab from '@/components/mail-tab'
+import ActionsQueue from '@/components/actions-queue'
 
 interface Memory {
   id: string
   date: string
-  time: string
+  time?: string
   content: string
+  summary?: string
   tags: string[]
   tasks?: string[]
   people?: string[]
+  sentiment?: string
 }
 
 export default function DashboardPage() {
   const [memories, setMemories] = useState<Memory[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Mock data - will be replaced with API call
-    const mockMemories: Memory[] = [
-      {
-        id: '1',
-        date: '2024-08-01',
-        time: '14:30',
-        content: 'Had a meeting with Sarah about the Q3 project roadmap. Discussed timeline and budget allocation.',
-        tags: ['meeting', 'work', 'planning'],
-        tasks: ['Review roadmap document', 'Schedule follow-up'],
-        people: ['Sarah Johnson'],
-      },
-      {
-        id: '2',
-        date: '2024-08-01',
-        time: '16:45',
-        content: 'Lunch with Alex at the downtown cafe. Caught up on personal projects and life updates.',
-        tags: ['social', 'personal'],
-        people: ['Alex'],
-      },
-    ]
-    setMemories(mockMemories)
-    setLoading(false)
+    const fetchMemories = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const data = await api.getMemories(10, 0)
+        setMemories(data.memories)
+      } catch (err) {
+        setError(err.message || 'Failed to fetch memories')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchMemories()
   }, [])
 
   const filteredMemories = memories.filter(
     (memory) =>
       memory.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      memory.tags.some((tag) => tag.includes(searchQuery.toLowerCase()))
+      memory.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (memory.summary && memory.summary.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   return (
@@ -60,15 +60,17 @@ export default function DashboardPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h1 className="text-4xl font-serif font-bold text-foreground">LifeLog</h1>
-              <p className="text-muted-foreground">Your memory and life management system</p>
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <h1 className="text-4xl font-serif font-bold text-foreground">LifeLog</h1>
+                <p className="text-muted-foreground">Your memory and life management system</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <Link href="/upload">
+                  <Button>+ New Memory</Button>
+                </Link>
+              </div>
             </div>
-            <Link href="/upload">
-              <Button>+ New Memory</Button>
-            </Link>
-          </div>
         </div>
 
         {/* Search */}
@@ -103,6 +105,10 @@ export default function DashboardPage() {
               <User className="w-4 h-4 mr-2" />
               People
             </TabsTrigger>
+            <TabsTrigger value="mail">
+              <Mail className="w-4 h-4 mr-2" />
+              Mail
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="memories" className="space-y-4">
@@ -129,14 +135,18 @@ export default function DashboardPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <CardTitle className="text-lg">{memory.date}</CardTitle>
-                        <CardDescription>{memory.time}</CardDescription>
+                        <CardDescription>{memory.time || 'N/A'}</CardDescription>
                       </div>
                       <div className="flex gap-2 flex-wrap justify-end">
-                        {memory.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary">
-                            {tag}
-                          </Badge>
-                        ))}
+                        {memory.tags && memory.tags.length > 0 ? (
+                          memory.tags.map((tag) => (
+                            <Badge key={tag} variant="secondary">
+                              {tag}
+                            </Badge>
+                          ))
+                        ) : (
+                          <Badge variant="secondary">No tags</Badge>
+                        )}
                       </div>
                     </div>
                   </CardHeader>
@@ -177,21 +187,11 @@ export default function DashboardPage() {
           </TabsContent>
 
           <TabsContent value="calendar">
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4 opacity-50" />
-                <p className="text-muted-foreground">Calendar view coming soon</p>
-              </CardContent>
-            </Card>
+            <CalendarTab />
           </TabsContent>
 
           <TabsContent value="tasks">
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Zap className="w-12 h-12 mx-auto text-muted-foreground mb-4 opacity-50" />
-                <p className="text-muted-foreground">Tasks view coming soon</p>
-              </CardContent>
-            </Card>
+            <ActionsQueue />
           </TabsContent>
 
           <TabsContent value="people">
@@ -201,6 +201,10 @@ export default function DashboardPage() {
                 <p className="text-muted-foreground">People view coming soon</p>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="mail">
+            <MailTab />
           </TabsContent>
         </Tabs>
       </div>

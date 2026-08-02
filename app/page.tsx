@@ -1,14 +1,26 @@
 'use client'
 
 import { NeuralCore } from "@/components/chat/neural-core"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowRight, Mic, Search, Brain, Calendar } from "lucide-react"
+import { useAuth } from "@/context/AuthContext"
+import { useRouter } from "next/navigation"
 
 export default function Home() {
   const [showChat, setShowChat] = useState(false)
+  const { user, isAuthenticated, isLoading } = useAuth()
+  const router = useRouter()
+
+  // Optional: redirect authenticated users to dashboard
+  // Uncomment if you want to redirect logged-in users
+  // useEffect(() => {
+  //   if (isAuthenticated && !isLoading) {
+  //     router.push('/dashboard')
+  //   }
+  // }, [isAuthenticated, isLoading, router])
 
   if (showChat) {
     return <NeuralCore />
@@ -27,7 +39,10 @@ export default function Home() {
             <Link href="/dashboard">
               <Button variant="ghost" size="sm">Dashboard</Button>
             </Link>
-            <Button onClick={() => setShowChat(true)} size="sm">
+            <Link href="/upload">
+              <Button size="sm">+ New Memory</Button>
+            </Link>
+            <Button onClick={() => setShowChat(true)} size="sm" variant="outline">
               Neural Core
             </Button>
           </div>

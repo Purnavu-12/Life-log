@@ -1,0 +1,10 @@
+INFO:database.connection:Database initialized successfully
+INFO:database.connection:Database initialized successfully
+INFO:services.poolside:Poolside service initialized. Poolside API available: True
+INFO:services.poolside:OpenAI fallback available: True
+INFO:     Started server process [4360]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 8002): [winerror 10048] only one usage of each socket address (protocol/network address/port) is normally permitted
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.

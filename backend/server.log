@@ -1,0 +1,58 @@
+INFO:database.connection:Database initialized successfully
+INFO:database.connection:Database initialized successfully
+INFO:services.poolside:Poolside service initialized. Poolside API available: True
+INFO:services.poolside:OpenAI fallback available: True
+INFO:     Started server process [18020]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:httpx:HTTP Request: GET https://inference.poolside.ai/v1/models "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://api.openai.com/v1/models "HTTP/1.1 401 Unauthorized"
+INFO:     127.0.0.1:34798 - "GET /health HTTP/1.1" 200 OK
+D:\Life-log\backend\main.py:109: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  created_at=datetime.utcnow(),
+INFO:__main__:Searching for user local-user: stew
+INFO:services.search:Search for 'stew' returned 0 results
+INFO:__main__:Found 0 results
+INFO:     127.0.0.1:34835 - "POST /api/search?query=stew&threshold=0.5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34835 - "GET /api/memories?limit=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34835 - "GET /api/memories/17c7dd76-3104-49c8-902e-9b4d0b26341d HTTP/1.1" 200 OK
+INFO:__main__:Searching for user local-user: stew
+INFO:services.search:Search for 'stew' returned 0 results
+INFO:__main__:Found 0 results
+INFO:     127.0.0.1:34846 - "POST /api/search?query=stew&threshold=0.5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34858 - "GET /api/memories?limit=20 HTTP/1.1" 200 OK
+INFO:__main__:Searching for user local-user: stew
+INFO:services.search:Search for 'stew' returned 5 results
+INFO:__main__:Found 5 results
+INFO:     127.0.0.1:16273 - "POST /api/search?query=stew&threshold=0.0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:6592 - "OPTIONS /api/memories?limit=10&offset=0 HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:26825 - "OPTIONS /api/memories?limit=10&offset=0 HTTP/1.1" 400 Bad Request
+ERROR:asyncio:Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+Traceback (most recent call last):
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\ASUS\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+    self._sock.shutdown(socket.SHUT_RDWR)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+INFO:__main__:Processing audio for user local-user: ElevenLabs_2026-06-16T10_44_38_David - Deep, Warm, Narration_pvc_sp100_s50_sb75_v3.mp3
+INFO:services.transcription:Local Whisper transcription successful: 725 characters
+INFO:__main__:Transcribed audio: 725 characters
+INFO:httpx:HTTP Request: POST https://inference.poolside.ai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:services.extraction:Extraction successful: {'summary': 'Pernasi is a multi-talented individual with interests in dance, music, theater, movies, and content creation. Recently, he has developed a strong interest in technology and coding, completing his first year of BTEC. His GitHub showcases his early coding journey, and he is exploring coding, AI development, and other tech areas. The narrative encourages following his journey as he learns and discovers new things.', 'tasks': ['Explore coding and AI development', 'Continue learning and experimenting with new technologies', 'Share and document the learning journey on GitHub'], 'people': ['Pernasi'], 'dates': ['first year of BTEC (recent completion)'], 'topics': ['Technology', 'Coding', 'AI development', 'BTEC', 'GitHub', 'Content creation', 'Dance', 'Music', 'Theater', 'Movies'], 'tags': ['technology', 'coding', 'AI', 'education', 'BTEC', 'GitHub', 'content-creation', 'multi-talent', 'learning-journey'], 'sentiment': 'positive', 'action_items': ["Follow Pernasi's journey in coding and AI development", 'Engage with and support his exploration of new technologies', 'Stay updated with his GitHub for progress and learning milestones']}
+INFO:__main__:Extracted information: {'summary': 'Pernasi is a multi-talented individual with interests in dance, music, theater, movies, and content creation. Recently, he has developed a strong interest in technology and coding, completing his first year of BTEC. His GitHub showcases his early coding journey, and he is exploring coding, AI development, and other tech areas. The narrative encourages following his journey as he learns and discovers new things.', 'tasks': ['Explore coding and AI development', 'Continue learning and experimenting with new technologies', 'Share and document the learning journey on GitHub'], 'people': ['Pernasi'], 'dates': ['first year of BTEC (recent completion)'], 'topics': ['Technology', 'Coding', 'AI development', 'BTEC', 'GitHub', 'Content creation', 'Dance', 'Music', 'Theater', 'Movies'], 'tags': ['technology', 'coding', 'AI', 'education', 'BTEC', 'GitHub', 'content-creation', 'multi-talent', 'learning-journey'], 'sentiment': 'positive', 'action_items': ["Follow Pernasi's journey in coding and AI development", 'Engage with and support his exploration of new technologies', 'Stay updated with his GitHub for progress and learning milestones']}
+INFO:services.search:Stored memory: ec9734db-2662-43fd-ab07-c28ec03b28b3
+INFO:__main__:Stored memory: ec9734db-2662-43fd-ab07-c28ec03b28b3 for user: local-user
+INFO:database.memory_crud:Created memory: f8a063bc-84b6-4cbc-af16-1b8ae718fc86 for user: local-user
+INFO:     127.0.0.1:16777 - "POST /api/upload HTTP/1.1" 200 OK
+INFO:__main__:Processing audio for user local-user: ElevenLabs_2026-06-16T10_42_23_Bunty - Funny Best Friend_pvc_sp100_s33_sb70_v3.mp3
+INFO:services.transcription:Local Whisper transcription successful: 758 characters
+INFO:__main__:Transcribed audio: 758 characters
+INFO:httpx:HTTP Request: POST https://inference.poolside.ai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:services.extraction:Extraction successful: {'summary': 'Introduction to Purnassai, a multi-disciplinary creative professional transitioning into technology and coding. After completing his first year of BTEC, he is exploring coding, AI, and development, documenting his learning journey on GitHub.', 'tasks': ['Explore coding, AI, and development', 'Document learning journey on GitHub', 'Continue learning and experimenting with new technologies'], 'people': ['Purnassai'], 'dates': ['First year of BTEC (recently completed)'], 'topics': ['Technology transition', 'Coding journey', 'AI exploration', 'Software development', 'Content creation', 'Creative arts (dance, music, theatre, movies)', 'GitHub portfolio'], 'tags': ['career transition', 'coding', 'AI', 'development', 'beginner journey', 'GitHub', 'BTEC', 'multidisciplinary', 'content creation'], 'sentiment': 'positive', 'action_items': ["Follow Purnassai's journey on GitHub", 'Join the community to be part of the learning journey', 'Stay tuned for future updates and explorations']}
+INFO:__main__:Extracted information: {'summary': 'Introduction to Purnassai, a multi-disciplinary creative professional transitioning into technology and coding. After completing his first year of BTEC, he is exploring coding, AI, and development, documenting his learning journey on GitHub.', 'tasks': ['Explore coding, AI, and development', 'Document learning journey on GitHub', 'Continue learning and experimenting with new technologies'], 'people': ['Purnassai'], 'dates': ['First year of BTEC (recently completed)'], 'topics': ['Technology transition', 'Coding journey', 'AI exploration', 'Software development', 'Content creation', 'Creative arts (dance, music, theatre, movies)', 'GitHub portfolio'], 'tags': ['career transition', 'coding', 'AI', 'development', 'beginner journey', 'GitHub', 'BTEC', 'multidisciplinary', 'content creation'], 'sentiment': 'positive', 'action_items': ["Follow Purnassai's journey on GitHub", 'Join the community to be part of the learning journey', 'Stay tuned for future updates and explorations']}
+INFO:services.search:Stored memory: 08029e3c-2ac4-4f34-8724-636bae59efbb
+INFO:__main__:Stored memory: 08029e3c-2ac4-4f34-8724-636bae59efbb for user: local-user
+INFO:database.memory_crud:Created memory: 86a148b4-375f-4793-adde-f1b571ca5533 for user: local-user
+INFO:     127.0.0.1:36070 - "POST /api/upload HTTP/1.1" 200 OK

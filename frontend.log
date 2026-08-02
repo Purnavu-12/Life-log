@@ -1,0 +1,415 @@
+   ▲ Next.js 16.0.10 (webpack)
+   - Local:         http://localhost:3000
+   - Network:       http://10.32.82.40:3000
+
+ ✓ Starting...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ✓ Ready in 2.4s
+ GET / 200 in 1789ms (compile: 1575ms, render: 214ms)
+ GET /dashboard 200 in 1721ms (compile: 1641ms, render: 80ms)
+ GET /upload 200 in 266ms (compile: 204ms, render: 62ms)
+ GET /search 200 in 246ms (compile: 211ms, render: 35ms)
+ GET /settings 200 in 303ms (compile: 257ms, render: 46ms)
+ GET /auth/login 200 in 296ms (compile: 265ms, render: 31ms)
+ GET /auth/register 200 in 247ms (compile: 221ms, render: 27ms)
+ GET / 200 in 166ms (compile: 9ms, render: 157ms)
+ GET /dashboard 200 in 36ms (compile: 6ms, render: 29ms)
+ GET /upload 200 in 26ms (compile: 7ms, render: 19ms)
+ GET /search 200 in 38ms (compile: 6ms, render: 32ms)
+ GET /settings 200 in 33ms (compile: 7ms, render: 26ms)
+ GET /auth/login 200 in 24ms (compile: 6ms, render: 18ms)
+ GET /auth/register 200 in 21ms (compile: 2ms, render: 19ms)
+ GET / 200 in 28ms (compile: 4ms, render: 24ms)
+ GET /dashboard 200 in 34ms (compile: 2ms, render: 32ms)
+ GET /upload 200 in 22ms (compile: 3ms, render: 20ms)
+ GET /search 200 in 25ms (compile: 4ms, render: 21ms)
+ GET /settings 200 in 23ms (compile: 2ms, render: 21ms)
+ GET / 200 in 28ms (compile: 3ms, render: 25ms)
+ GET / 200 in 34ms (compile: 11ms, render: 23ms)
+ GET /dashboard 200 in 22ms (compile: 1900µs, render: 20ms)
+ GET /upload 200 in 19ms (compile: 2ms, render: 17ms)
+ GET /search 200 in 20ms (compile: 2ms, render: 18ms)
+ GET /settings 200 in 24ms (compile: 2ms, render: 22ms)
+ GET / 200 in 24ms (compile: 3ms, render: 21ms)
+ GET /dashboard 200 in 24ms (compile: 2ms, render: 22ms)
+ GET /upload 200 in 20ms (compile: 2ms, render: 17ms)
+ GET /search 200 in 20ms (compile: 2ms, render: 18ms)
+ GET /settings 200 in 23ms (compile: 2ms, render: 20ms)
+ GET / 200 in 68ms (compile: 11ms, render: 57ms)
+ GET /dashboard 200 in 31ms (compile: 4ms, render: 26ms)
+ GET /upload 200 in 32ms (compile: 6ms, render: 26ms)
+ GET /upload 200 in 15ms (compile: 3ms, render: 12ms)
+ GET /upload 200 in 98ms (compile: 3ms, render: 95ms)
+ GET /upload 200 in 17ms (compile: 4ms, render: 13ms)
+ GET /upload 200 in 100ms (compile: 70ms, render: 29ms)
+ GET /upload 200 in 92ms (compile: 4ms, render: 88ms)
+ GET /upload 200 in 20ms (compile: 4ms, render: 16ms)
+ GET /upload 200 in 62ms (compile: 1886µs, render: 60ms)
+ GET /upload 200 in 16ms (compile: 3ms, render: 13ms)
+ GET /upload 200 in 59ms (compile: 9ms, render: 50ms)
+ GET /upload 200 in 197ms (compile: 22ms, render: 174ms)
+ GET /upload 200 in 28ms (compile: 4ms, render: 24ms)
+ GET /dashboard 200 in 35ms (compile: 12ms, render: 24ms)
+ GET /upload 200 in 27ms (compile: 5ms, render: 22ms)
+ GET /dashboard 200 in 32ms (compile: 7ms, render: 25ms)
+ GET / 200 in 648ms (compile: 337ms, render: 311ms)
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:663:1]
+ [2m660[0m |   /**
+ [2m661[0m |    * Call an MCP tool
+ [2m662[0m |    */
+ [2m663[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m664[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m665[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:705:1]
+ [2m702[0m |   /**
+ [2m703[0m |    * Call an MCP tool
+ [2m704[0m |    */
+ [2m705[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m706[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m707[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:705:1]
+ [2m702[0m |   /**
+ [2m703[0m |    * Call an MCP tool
+ [2m704[0m |    */
+ [2m705[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m706[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m707[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:705:1]
+ [2m702[0m |   /**
+ [2m703[0m |    * Call an MCP tool
+ [2m704[0m |    */
+ [2m705[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m706[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m707[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:705:1]
+ [2m702[0m |   /**
+ [2m703[0m |    * Call an MCP tool
+ [2m704[0m |    */
+ [2m705[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m706[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m707[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:705:1]
+ [2m702[0m |   /**
+ [2m703[0m |    * Call an MCP tool
+ [2m704[0m |    */
+ [2m705[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m706[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m707[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx
+ ⨯ ./lib/api.ts
+Error:   [31mx[0m 'eval' and 'arguments' cannot be used as a binding identifier in strict mode
+     ,-[[36;1;4mD:\Life-log\lib\api.ts[0m:705:1]
+ [2m702[0m |   /**
+ [2m703[0m |    * Call an MCP tool
+ [2m704[0m |    */
+ [2m705[0m |   async callMCPTool(serverName: string, toolName: string, arguments: any): Promise<any> {
+     : [35;1m                                                          ^^^^^^^^^[0m
+ [2m706[0m |     return this.request<any>('POST', `/api/mcp/tools/${serverName}/${toolName}`, arguments)
+ [2m707[0m |   }
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./app/dashboard/page.tsx

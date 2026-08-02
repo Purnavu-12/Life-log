@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import { Search, Zap } from 'lucide-react'
+import { api } from '@/lib/api'
 
 interface SearchResult {
   id: string
@@ -27,16 +28,8 @@ export default function SearchPage() {
 
     setIsSearching(true)
     try {
-      const response = await fetch('/api/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, threshold: threshold[0] }),
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setResults(data.results)
-      }
+      const data = await api.searchMemories(query, threshold[0])
+      setResults(data.results)
     } catch (error) {
       console.error('Search failed:', error)
     } finally {

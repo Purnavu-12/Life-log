@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Cormorant_Garamond } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
+import { AuthProvider } from '@/context/AuthContext'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -14,9 +15,9 @@ const _cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: 'Neural Core',
-  description: 'A sentient AI interface with surgical precision',
-  generator: 'v0.app',
+  title: 'LifeLog - AI-Powered Memory Management',
+  description: 'Capture, organize, and retrieve your life\'s important moments with AI-powered transcription and semantic search.',
+  generator: 'LifeLog',
   icons: {
     icon: [
       {
@@ -61,7 +62,9 @@ export default function RootLayout({
       </head>
       <body className={`font-sans antialiased`}>
         <ThemeProvider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ThemeProvider>
         <Analytics />
       </body>

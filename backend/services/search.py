@@ -12,17 +12,29 @@ logger = logging.getLogger(__name__)
 class SearchService:
     """Service for vector search using ChromaDB"""
 
-    def __init__(self):
+    def __init__(self, user_id: Optional[str] = None):
+        self.user_id = user_id
+        self.base_path = os.getenv("CHROMADB_PATH", "./data/chromadb")
         self.client = chromadb.PersistentClient(
-            path=os.getenv("CHROMADB_PATH", "./data/chromadb")
+            path=self._get_user_chromadb_path()
         )
         self.collection = self._get_or_create_collection()
+
+    def _get_user_chromadb_path(self) -> str:
+        """Get user-specific ChromaDB path"""
+        if not self.user_id:
+            return os.path.join(self.base_path, "default")
+        return os.path.join(self.base_path, self.user_id)
 
     def _get_or_create_collection(self):
         """Get or create the memories collection"""
         try:
+            collection_name = "memories"
+            if self.user_id:
+                collection_name = f"memories_{self.user_id}"
+            
             return self.client.get_or_create_collection(
-                name="memories",
+                name=collection_name,
                 metadata={"hnsw:space": "cosine"}
             )
         except Exception as e:
