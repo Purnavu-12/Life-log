@@ -2020,27 +2020,46 @@ async def chat(
         results = await search_service.search(enriched_query, 0.3)
 
         context_parts = []
+        non_empty_results = []
         for r in results[:5]:
             content = r.get("content") or ""
             tags = r.get("tags") or []
             summary = r.get("summary") or ""
-            context_parts.append(f"- {content} (tags: {', '.join(tags)})")
+            if content.strip():
+                context_parts.append(f"Memory:\nContent: {content}\nTags: {', '.join(tags) if tags else 'None'}\nSummary: {summary if summary else 'None'}")
+                non_empty_results.append(r)
 
-        context = "\n\n".join(context_parts) if context_parts else "No memories found."
+        context = "\n\n---\n\n".join(context_parts) if context_parts else "No memories found."
 
         # Generate an LLM-grounded answer
         answer = await poolside_service.generate_answer(question, context)
 
-        # Fallback: if no LLM provider worked, return the top memory content
+        # Fallback: if LLM returns a generic "no information" response but we have memories,
+        # provide the memories directly
         if not answer:
-            if results:
-                top = results[0]
+            if non_empty_results:
+                top = non_empty_results[0]
                 answer = (
                     f"I couldn't generate an AI answer, but here's the most relevant memory I found:\n\n"
                     f"**{top.get('summary') or 'Relevant memory'}**\n\n{top.get('content')}"
                 )
             else:
                 answer = "I couldn't find any relevant information in your memories."
+        elif non_empty_results and not answer.strip():
+            # If answer is empty and we have memories
+            top = non_empty_results[0]
+            answer = (
+                f"I couldn't generate an AI answer, but here's the most relevant memory I found:\n\n"
+                f"**{top.get('summary') or 'Relevant memory'}**\n\n{top.get('content')}"
+            )
+        elif "no information" in answer.lower() or "cannot answer" in answer.lower() or "does not contain" in answer.lower():
+            if non_empty_results:
+                # Build a more useful response from available memories
+                memory_list = []
+                for r in non_empty_results[:3]:
+                    summary = r.get('summary') or r.get('content', '')[:100] + '...'
+                    memory_list.append(f"- **{summary}**")
+                answer = f"Based on your memories:\n\n" + "\n".join(memory_list)
 
         return JSONResponse(
             status_code=200,

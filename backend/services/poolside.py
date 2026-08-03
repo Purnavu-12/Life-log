@@ -331,7 +331,8 @@ Return only valid JSON."""
             "You are Neural Core, the AI assistant for LifeLog, a memory management app. "
             "Answer the user's question using ONLY the provided memory context. "
             "Be concise, accurate, and cite facts from the context. If the context does not "
-            "contain enough information to answer, say so honestly instead of guessing."
+            "contain enough information to answer, provide the most relevant parts of the context "
+            "that might help the user, rather than just saying there's no information."
         )
         user_prompt = f"""Relevant memories / context:
 --- START CONTEXT ---
