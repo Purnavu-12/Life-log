@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import Link from "next/link"
 import { ConversationStream, Message } from "./conversation-stream"
 import { CommandDock } from "./command-dock"
 import { LatentSidebar, Conversation } from "./latent-sidebar"
-import { Layers, Moon, Sun } from "lucide-react"
+import { Layers, Moon, Sun, ArrowLeft } from "lucide-react"
 import { useTheme } from "@/components/theme-provider"
 import { api } from "@/lib/api"
 
@@ -187,6 +188,14 @@ export function NeuralCore() {
       {/* Header */}
       <header className="flex items-center justify-between px-6 md:px-16 lg:px-24 py-4 border-b border-border">
         <div className="flex items-center gap-3">
+          <Link href="/dashboard">
+            <button
+              className="flex items-center justify-center w-8 h-8 text-muted-foreground hover:text-foreground transition-colors magnetic-hover"
+              aria-label="Back to dashboard"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+          </Link>
           <span className="font-mono text-[11px] tracking-[0.2em] text-foreground uppercase">
             Neural_Core
           </span>

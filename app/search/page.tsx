@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
-import { Search, Zap } from 'lucide-react'
+import Link from 'next/link'
+import { Search, Zap, ArrowLeft } from 'lucide-react'
 import { api } from '@/lib/api'
 
 interface SearchResult {
@@ -48,8 +49,28 @@ export default function SearchPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-serif font-bold text-foreground mb-2">Search Memories</h1>
-          <p className="text-muted-foreground">Find memories using semantic search</p>
+          <div className="flex items-center gap-4">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="p-2">
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-3xl font-serif font-bold text-foreground mb-2">Search Memories</h1>
+              <p className="text-muted-foreground">Find memories using semantic search</p>
+            </div>
+          </div>
+          <div className="flex gap-2 mt-4">
+            <Link href="/dashboard">
+              <Button variant="outline" size="sm">Dashboard</Button>
+            </Link>
+            <Link href="/upload">
+              <Button variant="outline" size="sm">Upload</Button>
+            </Link>
+            <Link href="/settings">
+              <Button variant="outline" size="sm">Settings</Button>
+            </Link>
+          </div>
         </div>
 
         {/* Search Input */}

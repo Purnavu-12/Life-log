@@ -8,9 +8,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import Link from 'next/link'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, CheckCircle, Calendar, Mail, Link2, Unlink2, Download, Trash2 } from 'lucide-react'
+import { Loader2, CheckCircle, Calendar, Mail, Link2, Unlink2, Download, Trash2, ArrowLeft } from 'lucide-react'
 import { LifeLogApi, api } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
 
 export default function SettingsPage() {
   const router = useRouter()
@@ -28,6 +30,7 @@ export default function SettingsPage() {
   const [loadingSettings, setLoadingSettings] = useState(true)
   const [privacyAction, setPrivacyAction] = useState<string | null>(null)
   const [privacyMessage, setPrivacyMessage] = useState<string | null>(null)
+  const { toast } = useToast()
 
   // Load settings + Google connection status
   useEffect(() => {
@@ -75,8 +78,17 @@ export default function SettingsPage() {
       await api.updateSettings({ email_notifications: emailNotifications, auto_create_events: autoCreate })
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
+      toast({
+        title: "Settings saved",
+        description: "Your preferences have been updated.",
+      })
     } catch (err: any) {
       setGoogleError(err?.message || 'Failed to save settings')
+      toast({
+        title: "Save failed",
+        description: err?.message || 'Failed to save settings',
+        variant: "destructive",
+      })
     } finally {
       setSaving(false)
     }
@@ -94,6 +106,11 @@ export default function SettingsPage() {
     } catch (err: any) {
       setGoogleError(err?.message || 'Failed to connect Google')
       setConnecting(false)
+      toast({
+        title: "Google connect failed",
+        description: err?.message || 'Failed to connect Google',
+        variant: "destructive",
+      })
     }
   }
 
@@ -109,11 +126,25 @@ export default function SettingsPage() {
         // Refresh status
         const status = await api.getGoogleStatus()
         setGoogleStatus(status)
+        toast({
+          title: "Google disconnected",
+          description: "Your Google Calendar and Gmail integrations have been disconnected.",
+        })
       } else {
         setGoogleError(apiRes.message || 'Failed to disconnect')
+        toast({
+          title: "Disconnect failed",
+          description: apiRes.message || 'Failed to disconnect Google',
+          variant: "destructive",
+        })
       }
     } catch (err: any) {
       setGoogleError(err?.message || 'Failed to disconnect Google')
+      toast({
+        title: "Disconnect failed",
+        description: err?.message || 'Failed to disconnect Google',
+        variant: "destructive",
+      })
     } finally {
       setConnecting(false)
     }
@@ -134,8 +165,17 @@ export default function SettingsPage() {
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
       setPrivacyMessage('Your data has been exported as a JSON file.')
+      toast({
+        title: "Data exported",
+        description: "Your data has been downloaded as a JSON file.",
+      })
     } catch (err: any) {
       setPrivacyMessage(`Export failed: ${err?.message || 'unknown error'}`)
+      toast({
+        title: "Export failed",
+        description: err?.message || 'Unknown error',
+        variant: "destructive",
+      })
     } finally {
       setPrivacyAction(null)
     }
@@ -179,14 +219,26 @@ export default function SettingsPage() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-3xl font-serif font-bold text-foreground">Settings</h1>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push('/')}
-          >
-            ← Back to Home
-          </Button>
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="p-2">
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+            </Link>
+            <h1 className="text-3xl font-serif font-bold text-foreground">Settings</h1>
+          </div>
+          <div className="flex gap-2">
+            <Link href="/">
+              <Button variant="ghost" size="sm">
+                ← Back to Home
+              </Button>
+            </Link>
+            <Link href="/dashboard">
+              <Button variant="outline" size="sm">
+                → Dashboard
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {saved && (

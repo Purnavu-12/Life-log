@@ -4,13 +4,15 @@ import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Upload, Mic, Loader2, CheckCircle } from 'lucide-react'
+import { Upload, Mic, Loader2, CheckCircle, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/use-toast'
 
 export default function UploadPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [isRecording, setIsRecording] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
@@ -46,12 +48,21 @@ export default function UploadPage() {
       }
 
       setUploadComplete(true)
+      toast({
+        title: "Audio uploaded successfully",
+        description: "Your memory is being processed and stored.",
+      })
       setTimeout(() => {
         router.push('/dashboard')
       }, 2000)
     } catch (err: any) {
       setError(err?.message || 'Failed to upload audio. Please try again.')
       setIsUploading(false)
+      toast({
+        title: "Upload failed",
+        description: err?.message || 'Failed to upload audio',
+        variant: "destructive",
+      })
     }
   }
 
@@ -92,8 +103,28 @@ export default function UploadPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-8">
-          <h1 className="text-3xl font-serif font-bold text-foreground mb-2">LifeLog</h1>
-          <p className="text-muted-foreground">Capture your thoughts and memories</p>
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm" className="p-2">
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-3xl font-serif font-bold text-foreground mb-2">LifeLog</h1>
+              <p className="text-muted-foreground">Capture your thoughts and memories</p>
+            </div>
+          </div>
+          <div className="flex gap-2 mt-4">
+            <Link href="/dashboard">
+              <Button variant="outline" size="sm">Dashboard</Button>
+            </Link>
+            <Link href="/search">
+              <Button variant="outline" size="sm">Search</Button>
+            </Link>
+            <Link href="/settings">
+              <Button variant="outline" size="sm">Settings</Button>
+            </Link>
+          </div>
         </div>
 
         <Card className="border-0 shadow-lg">

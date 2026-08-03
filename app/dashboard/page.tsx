@@ -6,9 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, Search, Zap, User, Clock, Mail, FileText, Trash2 } from 'lucide-react'
+import { Calendar, Search, Zap, User, Clock, Mail, FileText, Trash2, ArrowLeft, Upload, MessageSquare, Settings } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
 import CalendarTab from '@/components/calendar-tab'
 import MailTab from '@/components/mail-tab'
 import ActionsQueue from '@/components/actions-queue'
@@ -27,6 +29,8 @@ interface Memory {
 }
 
 export default function DashboardPage() {
+  const router = useRouter()
+  const { toast } = useToast()
   const [memories, setMemories] = useState<Memory[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
@@ -60,8 +64,17 @@ export default function DashboardPage() {
     try {
       await api.deleteMemory(id)
       setMemories((prev) => prev.filter((m) => m.id !== id))
+      toast({
+        title: "Memory deleted",
+        description: "The memory has been removed.",
+      })
     } catch (err: any) {
       setError(err?.message || 'Failed to delete memory')
+      toast({
+        title: "Delete failed",
+        description: err?.message || 'Failed to delete memory',
+        variant: "destructive",
+      })
     }
   }
 
@@ -71,13 +84,26 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <div>
-              <h1 className="text-4xl font-serif font-bold text-foreground">LifeLog</h1>
-              <p className="text-muted-foreground">Your memory and life management system</p>
+            <div className="flex items-center gap-4">
+              <Link href="/">
+                <Button variant="ghost" size="sm" className="p-2">
+                  <ArrowLeft className="w-4 h-4" />
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-4xl font-serif font-bold text-foreground">LifeLog</h1>
+                <p className="text-muted-foreground">Your memory and life management system</p>
+              </div>
             </div>
             <div className="flex gap-4 items-center">
               <Link href="/upload">
                 <Button>+ New Memory</Button>
+              </Link>
+              <Link href="/chat">
+                <Button variant="outline" size="sm">
+                  <Search className="w-4 h-4 mr-1" />
+                  Neural Core
+                </Button>
               </Link>
             </div>
           </div>
@@ -94,6 +120,34 @@ export default function DashboardPage() {
               className="pl-10"
             />
           </div>
+        </div>
+
+        {/* Quick Navigation */}
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0">
+          <Link href="/upload">
+            <Button variant="outline" size="sm" className="shrink-0">
+              <Upload className="w-4 h-4 mr-1" />
+              Upload Memory
+            </Button>
+          </Link>
+          <Link href="/search">
+            <Button variant="outline" size="sm" className="shrink-0">
+              <Search className="w-4 h-4 mr-1" />
+              Search
+            </Button>
+          </Link>
+          <Link href="/chat">
+            <Button variant="outline" size="sm" className="shrink-0">
+              <MessageSquare className="w-4 h-4 mr-1" />
+              Neural Core
+            </Button>
+          </Link>
+          <Link href="/settings">
+            <Button variant="outline" size="sm" className="shrink-0">
+              <Settings className="w-4 h-4 mr-1" />
+              Settings
+            </Button>
+          </Link>
         </div>
 
         {/* Daily Briefing */}
