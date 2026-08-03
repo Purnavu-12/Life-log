@@ -969,23 +969,6 @@ async def list_messages(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/api/google/messages/{message_id}")
-async def get_message(
-    message_id: str,
-    current_user: UserResponse = Depends(get_local_user)
-):
-    """Get a specific Gmail message"""
-    try:
-        gmail_service = get_gmail_service(current_user.id)
-        message = await gmail_service.get_message(message_id)
-        return {"message": message}
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error getting message: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
 @app.get("/api/google/messages/important")
 async def list_important_messages(
     max_results: int = 10,
@@ -1000,6 +983,23 @@ async def list_important_messages(
         raise
     except Exception as e:
         logger.error(f"Error listing important messages: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/google/messages/{message_id}")
+async def get_message(
+    message_id: str,
+    current_user: UserResponse = Depends(get_local_user)
+):
+    """Get a specific Gmail message"""
+    try:
+        gmail_service = get_gmail_service(current_user.id)
+        message = await gmail_service.get_message(message_id)
+        return {"message": message}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting message: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

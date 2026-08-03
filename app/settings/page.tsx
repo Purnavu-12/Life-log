@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +13,7 @@ import { Loader2, CheckCircle, Calendar, Mail, Link2, Unlink2, Download, Trash2 
 import { LifeLogApi, api } from '@/lib/api'
 
 export default function SettingsPage() {
+  const router = useRouter()
   const [emailNotifications, setEmailNotifications] = useState(true)
   const [autoCreate, setAutoCreate] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -45,6 +47,23 @@ export default function SettingsPage() {
         setGoogleStatus(status)
       } catch (err: any) {
         setGoogleError(err?.message || 'Failed to check Google status')
+      }
+
+      // Check URL params for OAuth redirect result
+      const params = new URLSearchParams(window.location.search)
+      const googleParam = params.get('google')
+      if (googleParam === 'connected') {
+        const email = params.get('email') || ''
+        setGoogleStatus({ connected: true, email, scopes: [] })
+        setGoogleError(null)
+        // Clear the query param from the URL
+        window.history.replaceState({}, document.title, '/settings')
+      } else if (googleParam === 'error') {
+        const msg = params.get('message') || 'Google OAuth failed'
+        setGoogleError(msg)
+        setGoogleStatus({ connected: false })
+        // Clear the query param from the URL
+        window.history.replaceState({}, document.title, '/settings')
       }
     }
     load()
@@ -159,9 +178,15 @@ export default function SettingsPage() {
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-serif font-bold text-foreground">Settings</h1>
-          <p className="text-muted-foreground">Manage your LifeLog preferences</p>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push('/')}
+          >
+            ← Back to Home
+          </Button>
         </div>
 
         {saved && (
@@ -335,13 +360,23 @@ export default function SettingsPage() {
                 {googleStatus?.connected && (
                   <Alert className="bg-green-50 border-green-200 text-green-700">
                     <CheckCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      Connected to Google as {googleStatus.email}
-                      {googleStatus.scopes && googleStatus.scopes.length > 0 && (
-                        <span className="block text-sm mt-1">
-                          Scopes: {googleStatus.scopes.join(', ')}
-                        </span>
-                      )}
+                    <AlertDescription className="flex flex-col gap-2">
+                      <span>
+                        Connected to Google as {googleStatus.email}
+                        {googleStatus.scopes && googleStatus.scopes.length > 0 && (
+                          <span className="block text-sm mt-1">
+                            Scopes: {googleStatus.scopes.join(', ')}
+                          </span>
+                        )}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="self-start border-green-300 text-green-800 hover:bg-green-100"
+                        onClick={() => router.push('/dashboard')}
+                      >
+                        Go to Dashboard
+                      </Button>
                     </AlertDescription>
                   </Alert>
                 )}
