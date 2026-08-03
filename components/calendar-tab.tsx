@@ -155,9 +155,11 @@ export default function CalendarTab() {
                 className="flex items-center gap-4 p-4 border rounded-lg hover:bg-muted/40 transition-colors"
               >
                 <div className="flex flex-col items-center justify-center w-16 shrink-0">
-                  <span className="text-xl font-serif font-bold">{Number.isNaN(date.getDate()) ? '–' : date.getDate()}</span>
+                  <span className="text-xl font-serif font-bold">
+                    {date && !Number.isNaN(date.getDate()) ? date.getDate() : '–'}
+                  </span>
                   <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                    {Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString([], { month: 'short' })}
+                    {date && !Number.isNaN(date.getTime()) ? date.toLocaleDateString([], { month: 'short' }) : '—'}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">

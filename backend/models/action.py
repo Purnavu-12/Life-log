@@ -73,8 +73,12 @@ class ProposedActionResponse(ProposedActionBase):
 
 
 class ActionApprovalRequest(BaseModel):
-    """Model for approving/rejecting actions"""
-    action_id: str
+    """Model for approving/rejecting actions.
+
+    `action_id` is accepted here for backwards compatibility but is also taken
+    from the URL path, so it is optional.
+    """
+    action_id: Optional[str] = None
     approve: bool = True
     rejection_reason: Optional[str] = None
     scheduled_time: Optional[str] = None  # Allow rescheduling on approval

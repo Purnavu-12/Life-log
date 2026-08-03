@@ -87,10 +87,10 @@ function formatDate(isoDate: string): string {
   try {
     const date = new Date(isoDate)
     if (isNaN(date.getTime())) return isoDate
-    return date.toLocaleDateString([], { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString([], {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
     })
   } catch {
     return isoDate
@@ -239,7 +239,7 @@ export default function DailyBriefing() {
               Today's Events
             </CardTitle>
             <CardDescription>
-              {briefing.calendar.today_events_count > 0 
+              {briefing.calendar.today_events_count > 0
                 ? `You have ${briefing.calendar.today_events_count} events scheduled for today`
                 : 'No events scheduled for today'}
             </CardDescription>
@@ -276,7 +276,7 @@ export default function DailyBriefing() {
               High Priority Actions
             </CardTitle>
             <CardDescription>
-              {briefing.actions.high_priority.length > 0 
+              {briefing.actions.high_priority.length > 0
                 ? `You have ${briefing.actions.high_priority.length} high priority actions`
                 : 'No high priority actions'}
             </CardDescription>
@@ -287,8 +287,8 @@ export default function DailyBriefing() {
             ) : (
               briefing.actions.high_priority.map((action) => (
                 <div key={action.id} className="flex items-center gap-4 p-3 border rounded-lg">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" 
-                       style={{ backgroundColor: getPriorityColor(action.priority) }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: getPriorityColor(action.priority) }}>
                     <Zap className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -314,7 +314,7 @@ export default function DailyBriefing() {
               Recent Memories
             </CardTitle>
             <CardDescription>
-              {briefing.memories.recent.length > 0 
+              {briefing.memories.recent.length > 0
                 ? `You have ${briefing.memories.recent.length} recent memories`
                 : 'No recent memories'}
             </CardDescription>
@@ -340,7 +340,7 @@ export default function DailyBriefing() {
                       ))}
                     </div>
                   </div>
-                  <Badge className={getSentimentColor(memory.sentiment)}>
+                  <Badge className={getSentimentColor(memory.sentiment || 'neutral')}>
                     {memory.sentiment || 'neutral'}
                   </Badge>
                 </div>
@@ -357,7 +357,7 @@ export default function DailyBriefing() {
               Important Messages
             </CardTitle>
             <CardDescription>
-              {briefing.gmail.messages.length > 0 
+              {briefing.gmail.messages.length > 0
                 ? `You have ${briefing.gmail.messages.length} important messages`
                 : 'No important messages'}
             </CardDescription>

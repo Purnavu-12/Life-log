@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, Request, Depends, status
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request, Depends, status, Query, Body, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.security import HTTPBearer
@@ -7,6 +7,7 @@ from typing import Optional, List, Dict, Any
 import os
 from dotenv import load_dotenv
 import logging
+import asyncio
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -69,6 +70,20 @@ security = HTTPBearer()
 # ============================================================================
 LOCAL_USER_ID = os.getenv("LOCAL_USER_ID", "local-user")
 
+
+@app.on_event("startup")
+async def startup_event():
+    """Start MCP servers on application startup so health checks report them as running"""
+    try:
+        from mcp import memory_mcp_server, calendar_mcp_server, gmail_mcp_server
+        for server in [memory_mcp_server, calendar_mcp_server, gmail_mcp_server]:
+            try:
+                await server.start()
+            except Exception as e:
+                logger.error(f"Failed to start {getattr(server, 'config', None) and server.config.name} MCP server: {str(e)}")
+    except Exception as e:
+        logger.error(f"Could not start MCP servers on startup: {str(e)}")
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
@@ -92,24 +107,29 @@ async def health_check():
 
 
 async def _get_mcp_health() -> Dict[str, Any]:
-    """Get health status for all MCP servers"""
+    """Get health status for all MCP servers (starts servers lazily if not running)"""
     from mcp import memory_mcp_server, calendar_mcp_server, gmail_mcp_server
-    
+
     health = {}
-    
+
     try:
-        memory_health = await memory_mcp_server.health_check()
-        health["memory"] = memory_health
+        if not memory_mcp_server.running:
+            await memory_mcp_server.start()
+        health["memory"] = await memory_mcp_server.health_check()
     except Exception as e:
         health["memory"] = {"status": "error", "error": str(e)}
     
     try:
+        if not calendar_mcp_server.running:
+            await calendar_mcp_server.start()
         calendar_health = await calendar_mcp_server.health_check()
         health["calendar"] = calendar_health
     except Exception as e:
         health["calendar"] = {"status": "error", "error": str(e)}
     
     try:
+        if not gmail_mcp_server.running:
+            await gmail_mcp_server.start()
         gmail_health = await gmail_mcp_server.health_check()
         health["gmail"] = gmail_health
     except Exception as e:
@@ -177,7 +197,25 @@ async def mcp_server_health(server_name: str):
 # Authentication Routes
 
 from models.user import UserCreate, UserResponse
-from models.token import Token
+from models.token import Token, RefreshTokenRequest
+from pydantic import BaseModel, model_validator
+
+
+class LoginRequest(BaseModel):
+    """Login request body model.
+
+    Accepts either `email` (primary) or `username` (for local / installed-app
+    logins where the identifier is a username) plus `password`.
+    """
+    email: Optional[str] = None
+    username: Optional[str] = None
+    password: str
+
+    @model_validator(mode="after")
+    def _ensure_identifier(self):
+        if not self.email and not self.username:
+            raise ValueError("either email or username must be provided")
+        return self
 from fastapi.encoders import jsonable_encoder
 
 def get_local_user() -> UserResponse:
@@ -468,14 +506,38 @@ async def register_user(user_data: UserCreate):
 
 
 @app.post("/auth/login", response_model=Token)
-async def login_user(email: str, password: str):
-    """Login and get JWT token"""
+async def login_user(
+    body: Optional[LoginRequest] = Body(None),
+    email: Optional[str] = Query(None),
+    password: Optional[str] = Query(None),
+):
+    """Login and get JWT token (accepts JSON body or query params)"""
     try:
-        user = auth_service.authenticate_user(email, password)
+        # Support JSON body (used by the frontend) and query params for backwards compat
+        if body is not None:
+            email = body.email
+            password = body.password
+            username = body.username
+        else:
+            username = None
+
+        if not password:
+            raise HTTPException(
+                status_code=422,
+                detail="password is required (send JSON body or query params)"
+            )
+
+        # Authenticate by email (preferred) or username (local/installed-app logins).
+        user = None
+        if email:
+            user = auth_service.authenticate_user(email, password)
+        elif username:
+            user = auth_service.authenticate_user_by_username(username, password)
+
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect email or password",
+                detail="Incorrect email, username, or password",
                 headers={"WWW-Authenticate": "Bearer"}
             )
         
@@ -497,15 +559,33 @@ async def login_user(email: str, password: str):
             "expires_in": 30 * 60,  # 30 minutes
             "user": jsonable_encoder(user)
         }
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error logging in user: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/auth/refresh", response_model=Token)
-async def refresh_token(refresh_token: str):
-    """Refresh access token using refresh token"""
+async def refresh_token(
+    body: Optional[RefreshTokenRequest] = Body(None),
+    refresh_token: Optional[str] = Query(None),
+    authorization: Optional[str] = Header(None),
+):
+    """Refresh access token using refresh token (accepts JSON body, query param, or Authorization header)"""
     try:
+        # Support JSON body (frontend), query param, or Authorization: Bearer header
+        if body is not None and body.refresh_token:
+            refresh_token = body.refresh_token
+        elif not refresh_token and authorization and authorization.lower().startswith("bearer "):
+            refresh_token = authorization[7:].strip()
+
+        if not refresh_token:
+            raise HTTPException(
+                status_code=422,
+                detail="refresh_token is required (send JSON body, query param, or Authorization header)"
+            )
+
         tokens = auth_service.refresh_access_token(refresh_token)
         logger.info("Access token refreshed")
         return tokens
@@ -520,6 +600,105 @@ async def refresh_token(refresh_token: str):
 async def get_current_user_profile(current_user: UserResponse = Depends(get_local_user)):
     """Get current user profile"""
     return current_user
+
+
+# ============================================================================
+# User Settings Routes
+# ============================================================================
+
+@app.get("/api/settings")
+async def get_user_settings(current_user: UserResponse = Depends(get_local_user)):
+    """Get current user settings"""
+    from database.connection import get_db
+    default = {
+        "email_notifications": True,
+        "auto_create_events": True,
+        "theme": "dark",
+        "google_calendar_enabled": False,
+        "gmail_enabled": False,
+    }
+    try:
+        with get_db() as conn:
+            row = conn.execute(
+                "SELECT email_notifications, auto_create_events, theme, google_calendar_enabled, gmail_enabled "
+                "FROM user_settings WHERE user_id = ?",
+                (current_user.id,)
+            ).fetchone()
+        if not row:
+            return {**default}
+        return {
+            "email_notifications": bool(row["email_notifications"]),
+            "auto_create_events": bool(row["auto_create_events"]),
+            "theme": row["theme"] or "dark",
+            "google_calendar_enabled": bool(row["google_calendar_enabled"]),
+            "gmail_enabled": bool(row["gmail_enabled"]),
+        }
+    except Exception as e:
+        logger.error(f"Error fetching settings: {str(e)}")
+        return {**default}
+
+
+@app.put("/api/settings")
+async def update_user_settings(
+    payload: dict = Body(...),
+    current_user: UserResponse = Depends(get_local_user)
+):
+    """Update current user settings"""
+    from database.connection import get_db
+    try:
+        allowed = {
+            "email_notifications": payload.get("email_notifications", True),
+            "auto_create_events": payload.get("auto_create_events", True),
+            "theme": payload.get("theme", "dark"),
+            "google_calendar_enabled": payload.get("google_calendar_enabled", False),
+            "gmail_enabled": payload.get("gmail_enabled", False),
+        }
+        with get_db() as conn:
+            # Upsert settings
+            conn.execute(
+                """
+                INSERT INTO user_settings (user_id, email_notifications, auto_create_events, theme, google_calendar_enabled, gmail_enabled)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT(user_id) DO UPDATE SET
+                    email_notifications = excluded.email_notifications,
+                    auto_create_events = excluded.auto_create_events,
+                    theme = excluded.theme,
+                    google_calendar_enabled = excluded.google_calendar_enabled,
+                    gmail_enabled = excluded.gmail_enabled
+                """,
+                (
+                    current_user.id,
+                    int(bool(allowed["email_notifications"])),
+                    int(bool(allowed["auto_create_events"])),
+                    allowed["theme"],
+                    int(bool(allowed["google_calendar_enabled"])),
+                    int(bool(allowed["gmail_enabled"])),
+                )
+            )
+            conn.commit()
+
+        from services.audit import audit_service
+        from models.audit import AuditAction, AuditEntityType
+        audit_service.log(
+            user_id=current_user.id,
+            action=AuditAction.UPDATE,
+            entity_type=AuditEntityType.USER,
+            description="Updated user settings",
+            details={},
+            success=True
+        )
+
+        return {
+            "success": True,
+            "email_notifications": allowed["email_notifications"],
+            "auto_create_events": allowed["auto_create_events"],
+            "theme": allowed["theme"],
+            "google_calendar_enabled": allowed["google_calendar_enabled"],
+            "gmail_enabled": allowed["gmail_enabled"],
+        }
+    except Exception as e:
+        logger.error(f"Error updating settings: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ============================================================================
@@ -561,6 +740,7 @@ async def google_login(request: Request):
 @app.get("/auth/google/callback")
 async def google_callback(request: Request, code: str, state: str = None):
     """Google OAuth callback handler"""
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
     try:
         # Exchange code for token (with PKCE state)
         credentials = await google_oauth_service.exchange_code_for_token(code, state)
@@ -575,20 +755,14 @@ async def google_callback(request: Request, code: str, state: str = None):
         
         logger.info(f"Google OAuth callback successful for user {user_id}: {credentials.email}")
         
-        # Return success
-        return JSONResponse(
-            status_code=200,
-            content={
-                "success": True,
-                "email": credentials.email,
-                "google_user_id": credentials.google_user_id,
-                "scopes": credentials.scopes,
-                "message": "Google OAuth successful. Your Google account has been connected."
-            }
-        )
+        # Redirect back to the frontend with success status
+        from urllib.parse import urlencode, quote
+        query = urlencode({"google": "connected", "email": credentials.email or ""})
+        return RedirectResponse(url=f"{frontend_url}/settings?{query}")
     except Exception as e:
         logger.error(f"Google OAuth callback error: {str(e)}")
-        raise HTTPException(status_code=400, detail=str(e))
+        from urllib.parse import quote
+        return RedirectResponse(url=f"{frontend_url}/settings?google=error&message={quote(str(e))}")
 
 
 @app.post("/auth/google/connect")
@@ -1260,20 +1434,86 @@ async def approve_action_endpoint(
     request: ActionApprovalRequest,
     current_user: UserResponse = Depends(get_local_user)
 ):
-    """Approve a proposed action"""
+    """Approve a proposed action.
+
+    For calendar-type actions, this additionally creates the event in the
+    user's Google Calendar (if connected), closing the confirmation loop:
+    proposed -> approved -> event created. The DB status is updated first so
+    the action is durable even if the calendar write fails (the failure is
+    logged but does not roll back approval).
+    """
     try:
         from database import approve_action
-        
+
         action = approve_action(
             action_id=action_id,
             user_id=current_user.id,
             scheduled_time=request.scheduled_time
         )
-        
+
         if not action:
             raise HTTPException(status_code=404, detail="Action not found")
-        
-        logger.info(f"Approved action: {action_id}")
+
+        # Phase 13 of the build plan: after user confirmation, actually create
+        # the calendar event (the safest workflow — never auto-create, only on approval).
+        created_event_id = None
+        if action.action_type in (ActionType.CREATE_EVENT, ActionType.SET_REMINDER):
+            try:
+                from database import is_google_connected
+                # Don't attempt a calendar write (which can block on token refresh) if
+                # the user hasn't connected Google. Approval is already persisted.
+                if not is_google_connected(current_user.id):
+                    logger.warning(f"Approved action {action_id} is a calendar action but Google is not connected; skipping event creation")
+                else:
+                    from services.google import get_calendar_service
+                    calendar_service = get_calendar_service(current_user.id)
+                    start_time = (action.scheduled_time or request.scheduled_time)
+                    if start_time:
+                        from datetime import datetime, timedelta
+                        start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+                        duration = action.duration_minutes or 30
+                        end_dt = start_dt + timedelta(minutes=duration)
+
+                        # Run the (possibly synchronous) Google API call in a thread with
+                        # a timeout so it can never hang the approval request.
+                        async def _make_event():
+                            return await asyncio.wait_for(
+                                calendar_service.create_event(
+                                    summary=action.title,
+                                    start=start_dt.isoformat(),
+                                    end=end_dt.isoformat(),
+                                    description=action.description or f"Created from approved LifeLog action {action.id}",
+                                    location=action.location,
+                                ),
+                                timeout=25,
+                            )
+
+                        event = await _make_event()
+                        created_event_id = event.get("id") or event.get("htmlLink")
+                        logger.info(f"Created Google Calendar event for approved action {action_id}: {created_event_id}")
+                    else:
+                        logger.warning(f"Approved action {action_id} has no scheduled_time; calendar event not created")
+            except asyncio.TimeoutError:
+                logger.warning(f"Approved action {action_id} but Google Calendar event creation timed out (approval still persisted)")
+            except Exception as e:
+                # Approval already persisted; calendar write is best-effort.
+                logger.warning(f"Approved action {action_id} but Google Calendar event creation failed: {e}")
+
+        logger.info(f"Approved action: {action_id} (calendar_event_id={created_event_id})")
+
+        # Persist the created Google Calendar event id (best-effort) for auditability.
+        if created_event_id:
+            try:
+                from database import get_db as _get_db
+                with _get_db() as conn:
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        "UPDATE proposed_actions SET calendar_event_id = ? WHERE id = ? AND user_id = ?",
+                        (created_event_id, action_id, current_user.id),
+                    )
+            except Exception as e:
+                logger.warning(f"Could not persist calendar_event_id for action {action_id}: {e}")
+
         return action
     except Exception as e:
         logger.error(f"Error approving action: {str(e)}")
@@ -1613,17 +1853,33 @@ async def upload_audio(
         try:
             transcript = await transcription_service.transcribe(contents)
             logger.info(f"Transcribed audio: {len(transcript)} characters")
+            if not transcript or not transcript.strip():
+                raise HTTPException(
+                    status_code=422,
+                    detail=(
+                        "Transcription returned empty — the audio appears to contain no "
+                        "recognizable speech. Make sure the recording has clear speech."
+                    ),
+                )
+        except HTTPException:
+            raise
         except Exception as e:
             logger.error(f"Transcription failed: {str(e)}")
-            raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
+            # 422 (not 500) so the frontend can show a clear, actionable message
+            # rather than a generic "Failed to fetch".
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "Transcription failed. None of the configured transcription "
+                    f"providers succeeded: {e}. Configure a working provider "
+                    "(local whisper.cpp via SPECTRE_WHISPER_EXE, a valid "
+                    "OPENAI_API_KEY, or Poolside audio support)."
+                ),
+            )
 
-        # Step 2: Extract structured information and generate proposed actions
-        extracted, proposed_actions = await extraction_service.extract_and_save_actions(
-            transcript=transcript,
-            memory_id=""  # Will be set after storing in vector DB
-        )
+        # Step 2: Extract structured information (single LLM pass, no DB writes yet)
+        extracted = await extraction_service.extract(transcript)
         logger.info(f"Extracted information: {extracted}")
-        logger.info(f"Generated {len(proposed_actions)} proposed actions")
 
         # Step 3: Store in vector database
         memory_id = await search_service.store_memory(
@@ -1632,26 +1888,27 @@ async def upload_audio(
             filename=file.filename
         )
         logger.info(f"Stored memory: {memory_id} for user: {current_user.id}")
-        
-        # Update the proposed actions with the actual memory_id
-        if proposed_actions:
-            from database import delete_actions_by_memory
-            # Delete any actions that were created with empty memory_id
-            delete_actions_by_memory("", current_user.id)
-            
-            # Recreate actions with proper memory_id
-            proposed_actions = []
-            try:
-                extracted, proposed_actions = await extraction_service.extract_and_save_actions(
-                    transcript=transcript,
-                    memory_id=memory_id
-                )
-                logger.info(f"Recreated and saved {len(proposed_actions)} proposed actions with memory_id: {memory_id}")
-            except Exception as e:
-                logger.warning(f"Could not recreate actions: {str(e)}")
-                proposed_actions = []
 
-        # Step 4: Save to SQL database
+        # Step 4: Generate and save proposed actions ONCE, with the real memory_id
+        proposed_actions = []
+        try:
+            generated_actions = await extraction_service.generate_proposed_actions(
+                transcript=transcript,
+                extracted_data=extracted,
+                memory_id=memory_id
+            )
+            from database import create_proposed_action
+            for action_create in generated_actions:
+                try:
+                    proposed_actions.append(create_proposed_action(action_create, current_user.id))
+                except Exception as e:
+                    logger.error(f"Failed to save proposed action: {str(e)}")
+            logger.info(f"Generated and saved {len(proposed_actions)} proposed actions with memory_id: {memory_id}")
+        except Exception as e:
+            logger.warning(f"Could not generate proposed actions: {str(e)}")
+            proposed_actions = []
+
+        # Step 5: Save to SQL database
         from database import create_memory
         from models.memory import MemoryCreate
         
@@ -1724,6 +1981,76 @@ async def search_memories(
         )
     except Exception as e:
         logger.error(f"Error searching: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/chat")
+async def chat(
+    question: str = Body(..., embed=True),
+    current_user: UserResponse = Depends(get_local_user)
+):
+    """
+    Conversational chat over memories using a real LLM (Poolside primary, OpenAI fallback).
+    Searches memories for grounding context, then generates a grounded answer.
+    Falls back to the top matching memory content if no LLM provider is available.
+    """
+    try:
+        if not question or not question.strip():
+            raise HTTPException(status_code=400, detail="Question is required")
+
+        logger.info(f"Chat for user {current_user.id}: {question}")
+
+        # Build an enriched search query: use the question plus extracted
+        # keywords so semantic search retrieves relevant memories even when the
+        # phrasing differs (e.g. "assignment submission dates" vs "assignment due").
+        enriched_query = question
+        lower_q = question.lower()
+        # Pull out key nouns/phrases commonly relevant to LifeLog memories
+        keywords = []
+        for kw in ("assignment", "due", "deadline", "date", "submit", "submission",
+                   "exam", "meeting", "event", "reminder", "task", "homework",
+                   "page", "pages", "mathematics", "math", "professor"):
+            if kw in lower_q:
+                keywords.append(kw)
+        if keywords:
+            enriched_query = question + " " + " ".join(keywords)
+
+        # Search memories for grounding context
+        search_service = SearchService(user_id=current_user.id)
+        results = await search_service.search(enriched_query, 0.3)
+
+        context_parts = []
+        for r in results[:5]:
+            content = r.get("content") or ""
+            tags = r.get("tags") or []
+            summary = r.get("summary") or ""
+            context_parts.append(f"- {content} (tags: {', '.join(tags)})")
+
+        context = "\n\n".join(context_parts) if context_parts else "No memories found."
+
+        # Generate an LLM-grounded answer
+        answer = await poolside_service.generate_answer(question, context)
+
+        # Fallback: if no LLM provider worked, return the top memory content
+        if not answer:
+            if results:
+                top = results[0]
+                answer = (
+                    f"I couldn't generate an AI answer, but here's the most relevant memory I found:\n\n"
+                    f"**{top.get('summary') or 'Relevant memory'}**\n\n{top.get('content')}"
+                )
+            else:
+                answer = "I couldn't find any relevant information in your memories."
+
+        return JSONResponse(
+            status_code=200,
+            content={
+                "answer": answer,
+                "sources": results[:5]
+            }
+        )
+    except Exception as e:
+        logger.error(f"Error in chat: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

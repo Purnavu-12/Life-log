@@ -6,12 +6,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, Search, Zap, User, Clock, Mail, FileText } from 'lucide-react'
+import { Calendar, Search, Zap, User, Clock, Mail, FileText, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import CalendarTab from '@/components/calendar-tab'
 import MailTab from '@/components/mail-tab'
 import ActionsQueue from '@/components/actions-queue'
+import DailyBriefing from '@/components/daily-briefing'
 
 interface Memory {
   id: string
@@ -38,13 +39,13 @@ export default function DashboardPage() {
         setError(null)
         const data = await api.getMemories(10, 0)
         setMemories(data.memories)
-      } catch (err) {
-        setError(err.message || 'Failed to fetch memories')
+      } catch (err: any) {
+        setError(err?.message || 'Failed to fetch memories')
       } finally {
         setLoading(false)
       }
     }
-    
+
     fetchMemories()
   }, [])
 
@@ -55,22 +56,31 @@ export default function DashboardPage() {
       (memory.summary && memory.summary.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
+  const handleDeleteMemory = async (id: string) => {
+    try {
+      await api.deleteMemory(id)
+      setMemories((prev) => prev.filter((m) => m.id !== id))
+    } catch (err: any) {
+      setError(err?.message || 'Failed to delete memory')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <h1 className="text-4xl font-serif font-bold text-foreground">LifeLog</h1>
-                <p className="text-muted-foreground">Your memory and life management system</p>
-              </div>
-              <div className="flex gap-4 items-center">
-                <Link href="/upload">
-                  <Button>+ New Memory</Button>
-                </Link>
-              </div>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h1 className="text-4xl font-serif font-bold text-foreground">LifeLog</h1>
+              <p className="text-muted-foreground">Your memory and life management system</p>
             </div>
+            <div className="flex gap-4 items-center">
+              <Link href="/upload">
+                <Button>+ New Memory</Button>
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* Search */}
@@ -84,6 +94,11 @@ export default function DashboardPage() {
               className="pl-10"
             />
           </div>
+        </div>
+
+        {/* Daily Briefing */}
+        <div className="mb-8">
+          <DailyBriefing />
         </div>
 
         {/* Tabs */}
@@ -147,6 +162,15 @@ export default function DashboardPage() {
                         ) : (
                           <Badge variant="secondary">No tags</Badge>
                         )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-muted-foreground hover:text-red-600"
+                          onClick={() => handleDeleteMemory(memory.id)}
+                          aria-label="Delete memory"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
                       </div>
                     </div>
                   </CardHeader>

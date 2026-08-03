@@ -159,6 +159,15 @@ class AuthService:
             update_user(user.id, {"update_last_login": True})
             return user
         return None
+
+    def authenticate_user_by_username(self, username: str, password: str) -> Optional[UserInDB]:
+        """Authenticate a user by username and password (for local/installed-app logins)"""
+        from database import get_user_by_username, update_user
+        user = get_user_by_username(username)
+        if user and self.verify_password(password, user.hashed_password):
+            update_user(user.id, {"update_last_login": True})
+            return user
+        return None
     
     def register_user(self, user_data: UserCreate) -> UserInDB:
         """Register a new user"""

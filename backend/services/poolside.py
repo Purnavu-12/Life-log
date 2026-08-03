@@ -58,14 +58,33 @@ class PoolsideService:
         Returns:
             Transcribed text
         """
-        # Poolside currently doesn't support audio transcription through the OpenAI-compatible API
-        # For now, we'll skip Poolside and only use OpenAI as a fallback
-        logger.warning("Poolside audio transcription not available, falling back to OpenAI")
-        
+        # Try Poolside Whisper via the OpenAI-compatible audio API first.
+        if self.poolside_client:
+            try:
+                return await self._transcribe_with_poolside(audio_content, model, language)
+            except Exception as e:
+                logger.warning(f"Poolside transcription failed, falling back to OpenAI: {e}")
+
         if self.openai_client:
             return await self._transcribe_with_openai(audio_content, language)
         else:
-            raise Exception("No audio transcription service available (Poolside audio not supported, OpenAI not configured)")
+            raise Exception("No audio transcription service available (Poolside and OpenAI not configured)")
+
+    @staticmethod
+    def _ext_for_audio(audio_content: bytes) -> str:
+        """Detect audio container by magic bytes and return the correct file extension."""
+        if audio_content.startswith(b"RIFF") and audio_content[8:12] == b"WAVE":
+            return ".wav"
+        if audio_content[:2] == b"\xff\xfb" or audio_content.startswith(b"ID3"):
+            return ".mp3"
+        if audio_content.startswith(b"OggS"):
+            return ".ogg"
+        if audio_content.startswith(b"fLaC"):
+            return ".flac"
+        if audio_content.startswith(b"\x00\x00\x00") and b"ftyp" in audio_content[:12]:
+            return ".m4a"
+        # Fallback (ffprobe/most Whisper APIs accept mp3)
+        return ".mp3"
 
     async def _transcribe_with_poolside(
         self,
@@ -74,20 +93,21 @@ class PoolsideService:
         language: str = "en"
     ) -> str:
         """Transcribe audio using Poolside via the OpenAI SDK"""
-        # Create temporary file with original content (keep original format)
+        # Create in-memory file with the CORRECT extension for the container, so the
+        # multipart upload filetype matches the actual bytes (poolside's audio API
+        # rejects a mismatched extension like naming WAV bytes as .mp3).
         import io
         audio_file_obj = io.BytesIO(audio_content)
-        # Use .mp3 extension as it's more widely supported
-        audio_file_obj.name = "audio.mp3"
+        audio_file_obj.name = "audio" + self._ext_for_audio(audio_content)
 
         try:
             def _transcribe():
                 audio_file_obj.seek(0)  # Rewind to beginning
-                # Try with whisper-1 model (Poolside's whisper model)
-                poolside_model = model if model != "poolside/whisper-1" else "whisper-1"
+                # Poolside exposes Whisper as "whisper-1" over its OpenAI-compatible API.
+                poolside_model = "whisper-1" if model.startswith("poolside/") else model
                 return self.poolside_client.audio.transcriptions.create(
                     model=poolside_model,
-                    file=audio_file_obj,
+                    file=(audio_file_obj.name, audio_file_obj, f"audio/{audio_file_obj.name.rsplit('.',1)[1] or 'mpeg'}"),
                     language=language
                 )
 
@@ -98,17 +118,17 @@ class PoolsideService:
 
         except Exception as e:
             logger.error(f"Poolside transcription error: {str(e)}")
-            # Try with whisper-1 as fallback model name
+            # Retry once with the fallback model name
             if "whisper-1" not in str(e):
                 try:
                     def _transcribe_fallback():
                         audio_file_obj.seek(0)
                         return self.poolside_client.audio.transcriptions.create(
                             model="whisper-1",
-                            file=audio_file_obj,
+                            file=(audio_file_obj.name, audio_file_obj, f"audio/{audio_file_obj.name.rsplit('.',1)[1] or 'mpeg'}"),
                             language=language
                         )
-                    
+
                     response = await asyncio.to_thread(_transcribe_fallback)
                     transcript = response.text
                     logger.info(f"Poolside fallback transcription successful: {len(transcript)} characters")
@@ -117,7 +137,6 @@ class PoolsideService:
                     pass
             raise
         finally:
-            # Clean up
             try:
                 audio_file_obj.close()
             except Exception:
@@ -128,10 +147,10 @@ class PoolsideService:
         if not self.openai_client:
             raise Exception("OpenAI API key not configured")
 
-        # Use BytesIO to avoid file system operations
+        # Use BytesIO with the correct extension for the container.
         import io
         audio_file_obj = io.BytesIO(audio_content)
-        audio_file_obj.name = "audio.m4a"
+        audio_file_obj.name = "audio" + self._ext_for_audio(audio_content)
 
         try:
             def _transcribe():
@@ -297,6 +316,75 @@ Return only valid JSON."""
                 "sentiment": "neutral",
                 "action_items": []
             }
+
+    async def generate_answer(
+        self,
+        question: str,
+        context: str,
+        model: str = "poolside/laguna-s-2.1"
+    ) -> str:
+        """
+        Generate a grounded conversational answer using Poolside (OpenAI fallback).
+        Returns an empty string if all providers are unavailable.
+        """
+        system_prompt = (
+            "You are Neural Core, the AI assistant for LifeLog, a memory management app. "
+            "Answer the user's question using ONLY the provided memory context. "
+            "Be concise, accurate, and cite facts from the context. If the context does not "
+            "contain enough information to answer, say so honestly instead of guessing."
+        )
+        user_prompt = f"""Relevant memories / context:
+--- START CONTEXT ---
+{context}
+--- END CONTEXT ---
+
+Question: {question}
+
+Answer based only on the context above:"""
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ]
+
+        # Try Poolside first
+        if self.poolside_client:
+            try:
+                def _generate():
+                    response = self.poolside_client.chat.completions.create(
+                        model=model,
+                        messages=messages,
+                        temperature=0.3,
+                        max_tokens=500,
+                        stream=True,
+                        extra_body={"chat_template_kwargs": {"enable_thinking": False}}
+                    )
+                    parts = []
+                    for chunk in response:
+                        if chunk.choices and chunk.choices[0].delta.content is not None:
+                            parts.append(chunk.choices[0].delta.content)
+                    return "".join(parts).strip()
+                return await asyncio.to_thread(_generate)
+            except Exception as e:
+                logger.error(f"Poolside chat generation failed: {str(e)}")
+                # fall through to OpenAI
+
+        # OpenAI fallback
+        if self.openai_client:
+            try:
+                def _generate_openai():
+                    response = self.openai_client.chat.completions.create(
+                        model="gpt-4",
+                        messages=messages,
+                        temperature=0.3,
+                        max_tokens=500,
+                    )
+                    return response.choices[0].message.content.strip()
+                return await asyncio.to_thread(_generate_openai)
+            except Exception as e:
+                logger.error(f"OpenAI chat generation failed: {str(e)}")
+
+        return ""
 
     async def health_check(self) -> Dict[str, Any]:
         """Check Poolside API health"""

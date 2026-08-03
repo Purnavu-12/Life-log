@@ -25,7 +25,7 @@ export default function UploadPage() {
     const allowedExtensions = ['.mp3', '.wav', '.m4a', '.aac', '.ogg', '.flac', '.webm']
     const isAudioByType = file.type.startsWith('audio/')
     const isAudioByExtension = allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext))
-    
+
     if (isAudioByType || isAudioByExtension) {
       setUploadedFile(file)
       setError(null)
@@ -40,7 +40,7 @@ export default function UploadPage() {
     try {
       // Use the API client
       const response = await api.uploadAudio(file)
-      
+
       if (!response.success) {
         throw new Error(response.error || 'Upload failed')
       }
@@ -49,8 +49,8 @@ export default function UploadPage() {
       setTimeout(() => {
         router.push('/dashboard')
       }, 2000)
-    } catch (err) {
-      setError(err.message || 'Failed to upload audio. Please try again.')
+    } catch (err: any) {
+      setError(err?.message || 'Failed to upload audio. Please try again.')
       setIsUploading(false)
     }
   }

@@ -170,6 +170,15 @@ def init_db():
             )
         """)
         
+        # --- Idempotent migrations for existing deployments ---
+        # Add calendar_event_id to proposed_actions (created from approved actions)
+        try:
+            cursor.execute("ALTER TABLE proposed_actions ADD COLUMN calendar_event_id TEXT")
+        except sqlite3.OperationalError as e:
+            # Column already exists (SQLite: 'duplicate column name')
+            if "duplicate column name" not in str(e):
+                raise
+
         # Create indexes for better performance
         cursor.execute("""
             CREATE INDEX IF NOT EXISTS idx_memories_user_id 

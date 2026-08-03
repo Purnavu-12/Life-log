@@ -60,11 +60,21 @@ def create_proposed_action(
                 now
             )
         )
-        
+
         logger.info(f"Created proposed action: {action_id} for user: {user_id}")
-        
-        # Return the created action
-        return get_proposed_action(action_id, user_id)
+
+        # Return the created action, reading on the SAME connection so the
+        # just-inserted row is visible (SQLite isolation: a second connection
+        # opened before this block commits would not see the uncommitted row).
+        cursor.execute(
+            """
+            SELECT * FROM proposed_actions
+            WHERE id = ? AND user_id = ?
+            """,
+            (action_id, user_id),
+        )
+        row = cursor.fetchone()
+        return _row_to_action_response(row) if row else None
 
 
 def get_proposed_action(action_id: str, user_id: str) -> Optional[ProposedActionResponse]:
@@ -202,7 +212,9 @@ def update_proposed_action(
             return None
             
         logger.info(f"Updated proposed action: {action_id}")
-        return get_proposed_action(action_id, user_id)
+        cursor.execute("SELECT * FROM proposed_actions WHERE id = ? AND user_id = ?", (action_id, user_id))
+        row = cursor.fetchone()
+        return _row_to_action_response(row) if row else None
 
 
 def approve_action(
@@ -240,7 +252,9 @@ def approve_action(
             return None
             
         logger.info(f"Approved action: {action_id}")
-        return get_proposed_action(action_id, user_id)
+        cursor.execute("SELECT * FROM proposed_actions WHERE id = ? AND user_id = ?", (action_id, user_id))
+        row = cursor.fetchone()
+        return _row_to_action_response(row) if row else None
 
 
 def reject_action(
@@ -266,7 +280,9 @@ def reject_action(
             return None
             
         logger.info(f"Rejected action: {action_id} with reason: {rejection_reason}")
-        return get_proposed_action(action_id, user_id)
+        cursor.execute("SELECT * FROM proposed_actions WHERE id = ? AND user_id = ?", (action_id, user_id))
+        row = cursor.fetchone()
+        return _row_to_action_response(row) if row else None
 
 
 def complete_action(
@@ -292,7 +308,9 @@ def complete_action(
             return None
             
         logger.info(f"Completed action: {action_id}")
-        return get_proposed_action(action_id, user_id)
+        cursor.execute("SELECT * FROM proposed_actions WHERE id = ? AND user_id = ?", (action_id, user_id))
+        row = cursor.fetchone()
+        return _row_to_action_response(row) if row else None
 
 
 def delete_proposed_action(action_id: str, user_id: str) -> bool:

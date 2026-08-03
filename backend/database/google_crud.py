@@ -133,3 +133,9 @@ def get_google_enabled_users() -> list:
                 "full_name": row["full_name"]
             })
         return users
+
+
+def is_google_connected(user_id: str) -> bool:
+    """Return True if the user has valid Google OAuth credentials stored."""
+    creds = get_google_credentials(user_id)
+    return creds is not None and bool(creds.access_token)

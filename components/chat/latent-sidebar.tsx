@@ -7,7 +7,7 @@ export interface Message {
   id: string
   role: "user" | "assistant"
   content: string
-  timestamp: string
+  timestamp?: string
 }
 
 export interface Conversation {
@@ -27,9 +27,9 @@ interface LatentSidebarProps {
   onNewConversation: () => void
 }
 
-export function LatentSidebar({ 
-  isOpen, 
-  onClose, 
+export function LatentSidebar({
+  isOpen,
+  onClose,
   conversations,
   activeConversationId,
   onSelectConversation,
@@ -39,12 +39,12 @@ export function LatentSidebar({
     <>
       {/* Backdrop */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
           onClick={onClose}
         />
       )}
-      
+
       {/* Sidebar */}
       <div
         className={cn(
@@ -77,7 +77,7 @@ export function LatentSidebar({
             </button>
           </div>
         </div>
-        
+
         {/* Conversations List */}
         <div className="overflow-y-auto h-[calc(100%-60px)] scrollbar-neural">
           {conversations.length === 0 ? (

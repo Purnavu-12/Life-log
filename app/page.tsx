@@ -12,7 +12,7 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
+    <div className="min-h-screen bg-linear-to-br from-background via-background to-accent/5">
       {/* Navigation */}
       <nav className="border-b bg-background/80 backdrop-blur sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -186,7 +186,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-4 py-16">
-        <Card className="border-0 bg-gradient-to-r from-primary/10 to-accent/10">
+        <Card className="border-0 bg-linear-to-r from-primary/10 to-accent/10">
           <CardContent className="py-12 text-center space-y-6">
             <h2 className="text-3xl font-serif font-bold text-foreground">
               Ready to capture your life?
@@ -201,10 +201,12 @@ export default function Home() {
                   Start Recording
                 </Button>
               </Link>
-              <Button onClick={() => setShowChat(true)} size="lg" variant="outline">
-                <Brain className="w-4 h-4 mr-2" />
-                Ask Neural Core
-              </Button>
+              <Link href="/chat">
+                <Button size="lg" variant="outline">
+                  <Brain className="w-4 h-4 mr-2" />
+                  Ask Neural Core
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>

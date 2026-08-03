@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, CheckCircle, Calendar, Mail, Link2, Unlink2 } from 'lucide-react'
+import { Loader2, CheckCircle, Calendar, Mail, Link2, Unlink2, Download, Trash2 } from 'lucide-react'
 import { LifeLogApi, api } from '@/lib/api'
 
 export default function SettingsPage() {
@@ -23,10 +23,23 @@ export default function SettingsPage() {
   } | null>(null)
   const [connecting, setConnecting] = useState(false)
   const [googleError, setGoogleError] = useState<string | null>(null)
+  const [loadingSettings, setLoadingSettings] = useState(true)
+  const [privacyAction, setPrivacyAction] = useState<string | null>(null)
+  const [privacyMessage, setPrivacyMessage] = useState<string | null>(null)
 
-  // Check Google connection status
+  // Load settings + Google connection status
   useEffect(() => {
-    const checkGoogleStatus = async () => {
+    const load = async () => {
+      try {
+        const settings = await api.getSettings()
+        setEmailNotifications(settings.email_notifications)
+        setAutoCreate(settings.auto_create_events)
+      } catch (err: any) {
+        console.warn('Could not load settings', err)
+      } finally {
+        setLoadingSettings(false)
+      }
+
       try {
         const status = await api.getGoogleStatus()
         setGoogleStatus(status)
@@ -34,24 +47,27 @@ export default function SettingsPage() {
         setGoogleError(err?.message || 'Failed to check Google status')
       }
     }
-    checkGoogleStatus()
+    load()
   }, [])
 
   const handleSave = async () => {
     setSaving(true)
-    // Simulate save
-    setTimeout(() => {
-      setSaving(false)
+    try {
+      await api.updateSettings({ email_notifications: emailNotifications, auto_create_events: autoCreate })
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
-    }, 1000)
+    } catch (err: any) {
+      setGoogleError(err?.message || 'Failed to save settings')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleConnectGoogle = async () => {
     try {
       setConnecting(true)
       setGoogleError(null)
-      
+
       // Open Google OAuth in new window
       const scopes = ['calendar', 'gmail']
       const authUrl = api.getGoogleAuthUrl(scopes)
@@ -66,10 +82,10 @@ export default function SettingsPage() {
     try {
       setConnecting(true)
       setGoogleError(null)
-      
+
       // Use the API client method
       const apiRes = await api.disconnectGoogle()
-      
+
       if (apiRes.success) {
         // Refresh status
         const status = await api.getGoogleStatus()
@@ -81,6 +97,61 @@ export default function SettingsPage() {
       setGoogleError(err?.message || 'Failed to disconnect Google')
     } finally {
       setConnecting(false)
+    }
+  }
+
+  const handleExportData = async () => {
+    setPrivacyAction('exporting')
+    setPrivacyMessage(null)
+    try {
+      const data = await api.exportUserData()
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `lifelog-export-${new Date().toISOString().slice(0, 10)}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      setPrivacyMessage('Your data has been exported as a JSON file.')
+    } catch (err: any) {
+      setPrivacyMessage(`Export failed: ${err?.message || 'unknown error'}`)
+    } finally {
+      setPrivacyAction(null)
+    }
+  }
+
+  const handleClearData = async () => {
+    if (!window.confirm('This will permanently delete ALL your memories, actions, audit logs, and Google credentials. This cannot be undone. Continue?')) {
+      return
+    }
+    setPrivacyAction('clearing')
+    setPrivacyMessage(null)
+    try {
+      const res = await api.clearUserData()
+      setPrivacyMessage(res.message || 'All user data has been cleared.')
+      const status = await api.getGoogleStatus()
+      setGoogleStatus(status)
+    } catch (err: any) {
+      setPrivacyMessage(`Clear failed: ${err?.message || 'unknown error'}`)
+    } finally {
+      setPrivacyAction(null)
+    }
+  }
+
+  const handleRevokeGoogle = async () => {
+    setPrivacyAction('revoking')
+    setPrivacyMessage(null)
+    try {
+      const res = await api.revokeGoogleAccess()
+      setPrivacyMessage(res.message || 'Google access revoked.')
+      const status = await api.getGoogleStatus()
+      setGoogleStatus(status)
+    } catch (err: any) {
+      setPrivacyMessage(`Revoke failed: ${err?.message || 'unknown error'}`)
+    } finally {
+      setPrivacyAction(null)
     }
   }
 
@@ -289,11 +360,27 @@ export default function SettingsPage() {
                 <div className="p-4 bg-muted rounded-lg">
                   <h4 className="font-semibold mb-2">Data Retention</h4>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Your memories are stored securely and encrypted at rest.
+                    Your memories are stored securely and encrypted at rest. You can export or clear your data at any time.
                   </p>
-                  <Button variant="outline" size="sm">
-                    View Privacy Policy
-                  </Button>
+                  {privacyMessage && (
+                    <p className="text-sm text-green-700 mb-4">{privacyMessage}</p>
+                  )}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button variant="outline" size="sm" onClick={handleExportData} disabled={!!privacyAction}>
+                      {privacyAction === 'exporting' ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+                      Export My Data
+                    </Button>
+                    {googleStatus?.connected && (
+                      <Button variant="outline" size="sm" onClick={handleRevokeGoogle} disabled={!!privacyAction}>
+                        {privacyAction === 'revoking' ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Unlink2 className="w-4 h-4 mr-2" />}
+                        Revoke Google Access
+                      </Button>
+                    )}
+                    <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:border-red-300" onClick={handleClearData} disabled={!!privacyAction}>
+                      {privacyAction === 'clearing' ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+                      Clear All Data
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>

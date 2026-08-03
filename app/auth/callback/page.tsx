@@ -38,19 +38,19 @@ function GoogleCallbackContent() {
       try {
         // First, we need to get the tokens from the backend
         // The backend /auth/google/callback endpoint handles the OAuth flow
-        
+
         // Show loading while we wait for the backend to process
         setStatus('loading')
         setMessage('Connecting to Google...')
 
         // Call the backend to exchange code for tokens
         const response = await api.exchangeGoogleCode(code, state || '')
-        
+
         if (response.success) {
           setStatus('success')
           setMessage(`Connected Google account: ${response.email}`)
           setEmail(response.email || '')
-          
+
           // Redirect to settings after successful connection
           setTimeout(() => {
             router.push('/settings?google=connected')
@@ -59,9 +59,9 @@ function GoogleCallbackContent() {
           throw new Error(response.error || response.message || 'Failed to connect Google')
         }
 
-      } catch (err) {
+      } catch (err: any) {
         setStatus('error')
-        setMessage(err.message || 'Failed to connect Google account')
+        setMessage(err?.message || 'Failed to connect Google account')
       }
     }
 
@@ -104,7 +104,7 @@ function GoogleCallbackContent() {
             Please wait while we connect your Google account
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="text-center space-y-4">
           {status === 'loading' && (
             <>
@@ -112,7 +112,7 @@ function GoogleCallbackContent() {
               <p className="text-muted-foreground">{message}</p>
             </>
           )}
-          
+
           {status === 'success' && (
             <>
               <CheckCircle className="w-12 h-12 mx-auto text-green-500" />
@@ -123,7 +123,7 @@ function GoogleCallbackContent() {
               </Button>
             </>
           )}
-          
+
           {status === 'error' && (
             <>
               <XCircle className="w-12 h-12 mx-auto text-red-500" />

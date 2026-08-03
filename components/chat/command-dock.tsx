@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils"
 import { ArrowUp, Mic, Paperclip, Sparkles } from "lucide-react"
 import { useRef, useEffect, KeyboardEvent } from "react"
+import { useRouter } from "next/navigation"
 
 interface CommandDockProps {
   value: string
@@ -12,15 +13,30 @@ interface CommandDockProps {
   disabled?: boolean
 }
 
-export function CommandDock({ 
-  value, 
-  onChange, 
-  onSubmit, 
+const SUGGESTIONS = [
+  "What deadlines do I have coming up?",
+  "Summarize my recent memories",
+  "Any tasks assigned to me this week?",
+]
+
+export function CommandDock({
+  value,
+  onChange,
+  onSubmit,
   isThinking = false,
-  disabled = false 
+  disabled = false
 }: CommandDockProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  
+  const router = useRouter()
+  const suggestionIndex = useRef(0)
+
+  const handleSuggestion = () => {
+    const suggestion = SUGGESTIONS[suggestionIndex.current % SUGGESTIONS.length]
+    suggestionIndex.current += 1
+    onChange(suggestion)
+    textareaRef.current?.focus()
+  }
+
   // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
@@ -28,7 +44,7 @@ export function CommandDock({
       textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`
     }
   }, [value])
-  
+
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -37,10 +53,10 @@ export function CommandDock({
       }
     }
   }
-  
+
   return (
     <div className="px-6 md:px-16 lg:px-24 pb-6 pt-4">
-      <div 
+      <div
         className={cn(
           "relative obsidian-glass focus-glow transition-all duration-300",
           isThinking && "racing-border"
@@ -50,20 +66,24 @@ export function CommandDock({
         <div className="flex items-end gap-3 p-4">
           {/* Left action icons */}
           <div className="flex items-center gap-1 pb-1">
-            <button 
+            <button
               className="p-2 text-muted-foreground hover:text-foreground transition-colors magnetic-hover"
               aria-label="Add attachment"
+              title="Record or upload audio"
+              onClick={() => router.push('/upload')}
             >
               <Paperclip className="w-4 h-4" />
             </button>
-            <button 
+            <button
               className="p-2 text-muted-foreground hover:text-foreground transition-colors magnetic-hover"
               aria-label="Voice input"
+              title="Record a new memory"
+              onClick={() => router.push('/upload')}
             >
               <Mic className="w-4 h-4" />
             </button>
           </div>
-          
+
           {/* Textarea */}
           <textarea
             ref={textareaRef}
@@ -77,19 +97,21 @@ export function CommandDock({
               "flex-1 bg-transparent resize-none",
               "text-[15px] text-foreground placeholder:text-muted-foreground",
               "focus:outline-none caret-foreground",
-              "min-h-[24px] max-h-[200px] py-1"
+              "min-h-6 max-h-50 py-1"
             )}
           />
-          
+
           {/* Right action icons */}
           <div className="flex items-center gap-1 pb-1">
-            <button 
+            <button
               className="p-2 text-muted-foreground hover:text-foreground transition-colors magnetic-hover"
               aria-label="AI suggestions"
+              title="Insert a suggestion"
+              onClick={handleSuggestion}
             >
               <Sparkles className="w-4 h-4" />
             </button>
-            
+
             {/* Submit button */}
             <button
               onClick={onSubmit}
@@ -97,7 +119,7 @@ export function CommandDock({
               className={cn(
                 "p-2 transition-all magnetic-hover",
                 value.trim() && !disabled
-                  ? "text-foreground bg-gradient-to-r from-[#3B82F6] to-[#8B5CF6]"
+                  ? "text-foreground bg-linear-to-r from-[#3B82F6] to-[#8B5CF6]"
                   : "text-muted-foreground/30"
               )}
               aria-label="Send message"
@@ -106,7 +128,7 @@ export function CommandDock({
             </button>
           </div>
         </div>
-        
+
         {/* Bottom hint */}
         <div className="px-4 pb-3 flex items-center justify-between">
           <span className="font-mono text-[10px] tracking-wider text-muted-foreground/60 uppercase">
