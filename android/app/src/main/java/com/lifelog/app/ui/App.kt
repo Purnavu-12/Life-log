@@ -273,61 +273,24 @@ private fun SearchCard(result: SearchResult) {
 
 @Composable
 private fun SettingsScreen(onError: (String) -> Unit) {
-    val scope = rememberCoroutineScope()
-    var url by remember { mutableStateOf(Api.baseUrlFlow.value) }
-    var saving by remember { mutableStateOf(false) }
-    var testing by remember { mutableStateOf(false) }
-    var message by remember { mutableStateOf<String?>(null) }
     Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
         Text("Settings", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         ElevatedCard(shape = RoundedCornerShape(20.dp)) {
-            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(painterResource(R.drawable.ic_lifelog_logo), contentDescription = null, modifier = Modifier.size(32.dp).clip(RoundedCornerShape(8.dp)))
+                    Image(painterResource(R.drawable.ic_lifelog_logo), contentDescription = null, modifier = Modifier.size(40.dp).clip(RoundedCornerShape(10.dp)))
                     Spacer(Modifier.width(12.dp))
                     Column {
-                        Text("LifeLog server", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
-                        Text("Paste your server link. That's all that's needed.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                        Text("LifeLog", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
+                        Text("Your memories, synced with the web.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                     }
                 }
-                OutlinedTextField(
-                    value = url,
-                    onValueChange = { url = it },
-                    label = { Text("Server URL") },
-                    placeholder = { Text("https://your-server.example.com/") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    shape = RoundedCornerShape(14.dp),
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(
-                        onClick = {
-                            saving = true
-                            Api.setBaseUrl(url)
-                            message = "Server URL saved."
-                            saving = false
-                        },
-                        enabled = !saving,
-                    ) { Text(if (saving) "Saving…" else "Save") }
-                    TextButton(
-                        onClick = {
-                            testing = true
-                            scope.launch {
-                                Api.setBaseUrl(url)
-                                testing = false
-                                message = "Saved. Open Memories to verify the connection."
-                            }
-                        },
-                        enabled = !testing,
-                    ) { Text(if (testing) "Testing…" else "Test & save") }
-                }
-                message?.let { Text(it, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall) }
             }
         }
         ElevatedCard(shape = RoundedCornerShape(20.dp)) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("Privacy", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
-                Text("Audio is sent to your configured LifeLog server for transcription. Extracted memories are stored by the server and displayed here. The website and app share the same data.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                Text("Audio is sent to your LifeLog server for transcription. Extracted memories are stored by the server and displayed here. The website and app share the same data.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
             }
         }
         ElevatedCard(shape = RoundedCornerShape(20.dp)) {
