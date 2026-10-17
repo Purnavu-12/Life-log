@@ -18,16 +18,21 @@ The Android app intentionally does not duplicate transcription or extraction. Th
 The Android app is a client of the deployed LifeLog server. It does not use the
 repository's `backend/` directory as its production backend.
 
-Before running the app, replace the `API_BASE_URL` placeholder in
-`app/build.gradle.kts` with the server URL used by the website, for example:
+You can configure the server in either of two ways:
 
-```kotlin
-buildConfigField("String", "API_BASE_URL", "\"https://lifelog.example.com/\"")
-```
+1. Build-time: replace the `API_BASE_URL` placeholder in
+   `app/build.gradle.kts` with the server URL used by the website, for example:
 
-The URL must end with `/` because it is used as Retrofit's base URL. The server
-must expose the same endpoints used by the website, including `/api/upload`,
-`/api/memories`, `/api/search`, and `/api/memories/{id}`.
+   ```kotlin
+   buildConfigField("String", "API_BASE_URL", "\"https://lifelog.example.com/\"")
+   ```
+
+2. At runtime: open the app, go to **Settings**, paste your server link into
+   **Server URL**, and tap **Save**. The link is stored on the device.
+
+The URL must end with `/` (the app normalizes it). The server must expose the
+same endpoints used by the website, including `/api/upload`, `/api/memories`,
+`/api/search`, and `/api/memories/{id}`.
 
 The development manifest permits cleartext HTTP for local development. Use HTTPS and remove `android:usesCleartextTraffic="true"` for production.
 

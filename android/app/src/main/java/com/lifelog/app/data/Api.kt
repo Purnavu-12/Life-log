@@ -1,6 +1,11 @@
 package com.lifelog.app.data
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.lifelog.app.BuildConfig
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -13,8 +18,8 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
-import retrofit2.http.Query
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.io.IOException
 
 interface LifeLogService {
@@ -33,22 +38,62 @@ interface LifeLogService {
 }
 
 object Api {
+    private const val PREFS_NAME = "lifelog_settings"
+    private const val KEY_SERVER_URL = "server_url"
+
     private val json = Json { ignoreUnknownKeys = true }
-    private val client = OkHttpClient.Builder().build()
-    val service: LifeLogService = Retrofit.Builder()
-        .baseUrl(BuildConfig.API_BASE_URL)
-        .client(client)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .build()
-        .create(LifeLogService::class.java)
+    private lateinit var prefs: SharedPreferences
+
+    private val _baseUrl = MutableStateFlow(normalize(BuildConfig.API_BASE_URL))
+    val baseUrlFlow: StateFlow<String> = _baseUrl.asStateFlow()
+
+    fun init(context: Context) {
+        prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val stored = prefs.getString(KEY_SERVER_URL, null)
+        if (!stored.isNullOrBlank()) {
+            _baseUrl.value = normalize(stored)
+        }
+    }
+
+    fun setBaseUrl(url: String) {
+        val normalized = normalize(url)
+        if (::prefs.isInitialized) {
+            prefs.edit().putString(KEY_SERVER_URL, normalized).apply()
+        }
+        _baseUrl.value = normalized
+    }
+
+    val service: LifeLogService
+        get() {
+            val url = _baseUrl.value
+            if (url != cachedUrl || cachedService == null) {
+                cachedUrl = url
+                val client = OkHttpClient.Builder().build()
+                cachedService = Retrofit.Builder()
+                    .baseUrl(url)
+                    .client(client)
+                    .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+                    .build()
+                    .create(LifeLogService::class.java)
+            }
+            return cachedService!!
+        }
 
     suspend fun uploadBytes(name: String, bytes: ByteArray, mime: String): UploadResponse {
         val body = bytes.toRequestBody(mime.toMediaType())
         return service.upload(MultipartBody.Part.createFormData("file", name, body))
     }
+
+    private fun normalize(url: String): String {
+        val trimmed = url.trim()
+        return if (trimmed.endsWith("/")) trimmed else "$trimmed/"
+    }
+
+    private var cachedUrl: String? = null
+    private var cachedService: LifeLogService? = null
 }
 
 fun Throwable.userMessage(): String = when (this) {
-    is IOException -> "Could not reach LifeLog. Check that the server is running."
+    is IOException -> "Could not reach LifeLog. Check the server URL and your connection."
     else -> message?.takeIf { it.isNotBlank() } ?: "Something went wrong. Please try again."
 }
