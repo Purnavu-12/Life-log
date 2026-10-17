@@ -73,6 +73,8 @@ import androidx.browser.customtabs.CustomTabsIntent
 import com.lifelog.app.data.EventSocket
 import com.lifelog.app.data.GoogleState
 import com.lifelog.app.data.LiveEvent
+import com.lifelog.app.data.from
+import com.lifelog.app.data.subject
 import com.lifelog.app.data.Memory
 import com.lifelog.app.data.SearchResult
 import com.lifelog.app.data.userMessage
