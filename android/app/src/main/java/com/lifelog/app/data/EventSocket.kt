@@ -1,5 +1,6 @@
 package com.lifelog.app.data
 
+import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,13 +23,16 @@ object EventSocket {
     fun connect(baseUrl: String) {
         disconnect()
         val wsUrl = toEventsUrl(baseUrl)
+        Log.d("LifeLogWS", "Connecting to $wsUrl")
         val request = Request.Builder().url(wsUrl).build()
         socket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
+                Log.d("LifeLogWS", "Connected to $wsUrl")
                 _connected.value = true
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
+                Log.d("LifeLogWS", "Received: $text")
                 val event = EventParser.parse(text)
                 _events.value = listOf(event) + _events.value.take(99)
             }
@@ -38,6 +42,7 @@ object EventSocket {
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                Log.e("LifeLogWS", "Failure: ${t.message}", t)
                 _connected.value = false
             }
         })

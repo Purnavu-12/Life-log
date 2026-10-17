@@ -11,12 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.lifelog.app.data.Api
+import com.lifelog.app.data.EventSocket
 import com.lifelog.app.ui.LifeLogApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Api.init(applicationContext)
+        EventSocket.connect(Api.baseUrlFlow.value)
         setContent { LifeLogTheme { LifeLogApp(rememberNavController()) } }
     }
 }
