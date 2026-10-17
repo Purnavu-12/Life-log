@@ -61,10 +61,14 @@ fun CaptureScreen(vm: LifeLogViewModel, onDone: () -> Unit, onError: (String) ->
                     recorder?.stop(); recorder?.release(); recorder = null; recording = false
                     recordingFile?.let { vm.uploadFile(it, "audio/mp4", onDone, onError) }
                 } else permission.launch(Manifest.permission.RECORD_AUDIO)
-            }, Modifier.fillMaxWidth()) {
+            }, modifier = Modifier.fillMaxWidth()) {
                 Icon(Icons.Default.Mic, null); Text(if (recording) "Stop and process" else "Record audio", Modifier.padding(start = 8.dp))
             }
-            Button(onClick = { picker.launch("audio/*") }, enabled = !recording && !state.uploading, Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { picker.launch("audio/*") },
+                enabled = !recording && !state.uploading,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
                 Icon(Icons.Default.UploadFile, null); Text("Choose audio file", Modifier.padding(start = 8.dp))
             }
             if (state.uploading) { CircularProgressIndicator(); Text("Transcribing and extracting your memory…") }
