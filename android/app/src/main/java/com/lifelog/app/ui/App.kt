@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Search
@@ -67,6 +68,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.lifelog.app.R
 import com.lifelog.app.data.Api
+import com.lifelog.app.data.EventSocket
+import com.lifelog.app.data.LiveEvent
 import com.lifelog.app.data.Memory
 import com.lifelog.app.data.SearchResult
 import com.lifelog.app.data.userMessage
@@ -74,6 +77,7 @@ import kotlinx.coroutines.launch
 
 private data class Destination(val route: String, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
 private val destinations = listOf(
+    Destination("live", "Live", Icons.Default.GraphicEq),
     Destination("home", "Memories", Icons.Default.Home),
     Destination("search", "Search", Icons.Default.Search),
     Destination("settings", "Settings", Icons.Default.Settings),
@@ -82,9 +86,11 @@ private val destinations = listOf(
 @Composable
 fun LifeLogApp(nav: NavHostController, vm: LifeLogViewModel = viewModel()) {
     val entry by nav.currentBackStackEntryAsState()
-    val route = entry?.destination?.route ?: "home"
+    val route = entry?.destination?.route ?: "live"
     val snackbar = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val baseUrl by Api.baseUrlFlow.collectAsState()
+    LaunchedEffect(baseUrl) { EventSocket.connect(baseUrl) }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) },
         containerColor = MaterialTheme.colorScheme.background,
@@ -110,7 +116,8 @@ fun LifeLogApp(nav: NavHostController, vm: LifeLogViewModel = viewModel()) {
             }
         },
     ) { padding ->
-        NavHost(nav, "home", Modifier.padding(padding)) {
+        NavHost(nav, "live", Modifier.padding(padding)) {
+            composable("live") { LiveScreen() }
             composable("home") { HomeScreen(vm, onError = { scope.launch { snackbar.showSnackbar(it) } }, onCapture = { nav.navigate("capture") }) }
             composable("search") { SearchScreen(vm) }
             composable("settings") { SettingsScreen(onError = { scope.launch { snackbar.showSnackbar(it) } }) }
@@ -298,6 +305,42 @@ private fun SettingsScreen(onError: (String) -> Unit) {
                 Text("About", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
                 Text("LifeLog Android client v1.0", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                 Text("ESP32 audio → server transcription → notes on app & web.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+}
+
+@Composable
+private fun LiveScreen() {
+    val events by EventSocket.events.collectAsState()
+    val connected by EventSocket.connected.collectAsState()
+    Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Box(Modifier.size(10.dp).clip(CircleShape).background(if (connected) Color(0xFF4CAF50) else Color(0xFFE53935)))
+            Text(if (connected) "Connected to server events" else "Connecting…", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+        }
+        Text("Live transcripts from your ESP32 audio stream.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+        if (events.isEmpty()) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    CircularProgressIndicator()
+                    Text("Waiting for transcript messages…", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+        } else {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                items(events, key = { it.id }) { event ->
+                    ElevatedCard(shape = RoundedCornerShape(16.dp)) {
+                        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date(event.receivedAt)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                            Text(event.text, style = MaterialTheme.typography.bodyMedium)
+                            if (event.raw != event.text) {
+                                Text(event.raw, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 3, overflow = TextOverflow.Ellipsis)
+                            }
+                        }
+                    }
+                }
+                item { Spacer(Modifier.height(80.dp)) }
             }
         }
     }
