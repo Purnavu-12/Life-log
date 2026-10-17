@@ -1,5 +1,7 @@
 package com.lifelog.app
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.lifelog.app.data.Api
 import com.lifelog.app.data.EventSocket
+import com.lifelog.app.data.GoogleState
 import com.lifelog.app.ui.LifeLogApp
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +22,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Api.init(applicationContext)
         EventSocket.connect(Api.baseUrlFlow.value)
+        handleDeepLink(intent)
         setContent { LifeLogTheme { LifeLogApp(rememberNavController()) } }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleDeepLink(intent)
+    }
+
+    private fun handleDeepLink(intent: Intent?) {
+        val uri = intent?.data ?: return
+        if (uri.scheme == "lifelog" && uri.host == "oauth") {
+            val status = uri.getQueryParameter("google")
+            val email = uri.getQueryParameter("email")
+            if (status == "connected") {
+                GoogleState.markConnected(email)
+            }
+        }
     }
 }
 

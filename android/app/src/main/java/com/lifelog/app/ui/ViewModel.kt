@@ -5,6 +5,14 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lifelog.app.data.Api
+import com.lifelog.app.data.CalendarsResponse
+import com.lifelog.app.data.GoogleEvent
+import com.lifelog.app.data.GoogleEventsResponse
+import com.lifelog.app.data.GoogleMessagesResponse
+import com.lifelog.app.data.GoogleProfileResponse
+import com.lifelog.app.data.GoogleState
+import com.lifelog.app.data.GoogleStatus
+import com.lifelog.app.data.GmailMessage
 import com.lifelog.app.data.Memory
 import com.lifelog.app.data.SearchResult
 import com.lifelog.app.data.UploadResponse
@@ -19,6 +27,9 @@ data class AppState(
     val uploading: Boolean = false,
     val memories: List<Memory> = emptyList(),
     val lastUpload: UploadResponse? = null,
+    val googleStatus: GoogleStatus? = null,
+    val upcomingEvents: List<GoogleEvent> = emptyList(),
+    val importantEmails: List<GmailMessage> = emptyList(),
 )
 
 class LifeLogViewModel : ViewModel() {
@@ -57,6 +68,34 @@ class LifeLogViewModel : ViewModel() {
     fun uploadFile(file: File, mime: String, onDone: () -> Unit, onError: (String) -> Unit) = viewModelScope.launch {
         _state.value = _state.value.copy(uploading = true, lastUpload = null)
         runCatching { Api.uploadBytes(file.name, file.readBytes(), mime) }.handleUpload(onDone, onError)
+    }
+
+    fun loadGoogleStatus() = viewModelScope.launch {
+        runCatching { Api.service.googleStatus() }
+            .onSuccess { _state.value = _state.value.copy(googleStatus = it) }
+    }
+
+    fun disconnectGoogle(onDone: () -> Unit = {}, onError: (String) -> Unit = {}) = viewModelScope.launch {
+        runCatching { Api.service.googleDisconnect() }
+            .onSuccess {
+                _state.value = _state.value.copy(googleStatus = GoogleStatus(connected = false), upcomingEvents = emptyList(), importantEmails = emptyList())
+                onDone()
+            }
+            .onFailure { onError(it.userMessage()) }
+    }
+
+    fun loadUpcomingEvents() = viewModelScope.launch {
+        if (_state.value.googleStatus?.connected != true) return@launch
+        val now = java.time.Instant.now().toString()
+        val later = java.time.Instant.now().plusSeconds(7 * 24 * 3600).toString()
+        runCatching { Api.service.googleEvents(timeMin = now, timeMax = later) }
+            .onSuccess { _state.value = _state.value.copy(upcomingEvents = it.events) }
+    }
+
+    fun loadImportantEmails() = viewModelScope.launch {
+        if (_state.value.googleStatus?.connected != true) return@launch
+        runCatching { Api.service.googleImportantMessages(10) }
+            .onSuccess { _state.value = _state.value.copy(importantEmails = it.messages) }
     }
 
     private fun Result<UploadResponse>.handleUpload(onDone: () -> Unit, onError: (String) -> Unit) {

@@ -35,6 +35,28 @@ interface LifeLogService {
 
     @POST("api/search")
     suspend fun search(@Query("query") query: String, @Query("threshold") threshold: Double = 0.5): SearchResponse
+
+    @GET("auth/google/status")
+    suspend fun googleStatus(): GoogleStatus
+
+    @POST("auth/google/disconnect")
+    suspend fun googleDisconnect(): SimpleResponse
+
+    @GET("api/google/calendars")
+    suspend fun googleCalendars(): CalendarsResponse
+
+    @GET("api/google/events")
+    suspend fun googleEvents(
+        @Query("calendar_id") calendarId: String = "primary",
+        @Query("time_min") timeMin: String? = null,
+        @Query("time_max") timeMax: String? = null,
+    ): GoogleEventsResponse
+
+    @GET("api/google/messages/important")
+    suspend fun googleImportantMessages(@Query("max_results") maxResults: Int = 10): GoogleMessagesResponse
+
+    @GET("api/google/profile")
+    suspend fun googleProfile(): GoogleProfileResponse
 }
 
 object Api {

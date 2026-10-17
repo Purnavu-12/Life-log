@@ -713,8 +713,11 @@ async def google_login(request: Request):
     try:
         # Get state parameter for CSRF protection
         state = request.query_params.get("state", "")
+        mobile = request.query_params.get("mobile", "")
         scopes = request.query_params.getlist("scope")
-        
+        if mobile:
+            state = f"mobile:{state}" if state else "mobile"
+
         # Determine scopes based on what user wants to connect
         if "gmail" in scopes:
             auth_url = google_oauth_service.get_authorization_url(
@@ -729,7 +732,7 @@ async def google_login(request: Request):
         else:
             # Default: both
             auth_url = google_oauth_service.get_authorization_url(state=state)
-        
+
         logger.info(f"Redirecting to Google OAuth: {auth_url}")
         return RedirectResponse(url=auth_url)
     except Exception as e:
@@ -755,13 +758,17 @@ async def google_callback(request: Request, code: str, state: str = None):
         
         logger.info(f"Google OAuth callback successful for user {user_id}: {credentials.email}")
         
-        # Redirect back to the frontend with success status
+        # Redirect back to the frontend or the mobile app with success status
         from urllib.parse import urlencode, quote
         query = urlencode({"google": "connected", "email": credentials.email or ""})
+        if (state or "").startswith("mobile"):
+            return RedirectResponse(url=f"lifelog://oauth?{query}")
         return RedirectResponse(url=f"{frontend_url}/settings?{query}")
     except Exception as e:
         logger.error(f"Google OAuth callback error: {str(e)}")
         from urllib.parse import quote
+        if (state or "").startswith("mobile"):
+            return RedirectResponse(url=f"lifelog://oauth?google=error&message={quote(str(e))}")
         return RedirectResponse(url=f"{frontend_url}/settings?google=error&message={quote(str(e))}")
 
 

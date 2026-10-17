@@ -68,7 +68,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.lifelog.app.R
 import com.lifelog.app.data.Api
+import android.content.Intent
+import androidx.browser.customtabs.CustomTabsIntent
 import com.lifelog.app.data.EventSocket
+import com.lifelog.app.data.GoogleState
 import com.lifelog.app.data.LiveEvent
 import com.lifelog.app.data.Memory
 import com.lifelog.app.data.SearchResult
@@ -120,7 +123,7 @@ fun LifeLogApp(nav: NavHostController, vm: LifeLogViewModel = viewModel()) {
             composable("live") { LiveScreen() }
             composable("home") { HomeScreen(vm, onError = { scope.launch { snackbar.showSnackbar(it) } }, onCapture = { nav.navigate("capture") }) }
             composable("search") { SearchScreen(vm) }
-            composable("settings") { SettingsScreen(onError = { scope.launch { snackbar.showSnackbar(it) } }) }
+            composable("settings") { SettingsScreen(vm, onError = { scope.launch { snackbar.showSnackbar(it) } }) }
             composable("capture") {
                 CaptureScreen(
                     vm,
@@ -135,8 +138,14 @@ fun LifeLogApp(nav: NavHostController, vm: LifeLogViewModel = viewModel()) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreen(vm: LifeLogViewModel, onError: (String) -> Unit, onCapture: () -> Unit) {
-    LaunchedEffect(Unit) { vm.loadMemories() }
+    LaunchedEffect(Unit) { vm.loadMemories(); vm.loadGoogleStatus() }
     val state by vm.state.collectAsState()
+    LaunchedEffect(state.googleStatus?.connected) {
+        if (state.googleStatus?.connected == true) {
+            vm.loadUpcomingEvents()
+            vm.loadImportantEmails()
+        }
+    }
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         TopAppBar(
             title = {
@@ -164,6 +173,36 @@ private fun HomeScreen(vm: LifeLogViewModel, onError: (String) -> Unit, onCaptur
                 }
             }
             Spacer(Modifier.height(20.dp))
+            if (state.googleStatus?.connected == true) {
+                if (state.upcomingEvents.isNotEmpty()) {
+                    Text("Upcoming events", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(8.dp))
+                    state.upcomingEvents.take(5).forEach { event ->
+                        ElevatedCard(shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(event.summary ?: "Event", fontWeight = FontWeight.SemiBold)
+                                Text(event.start?.dateTime ?: event.start?.date ?: "", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                event.location?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary) }
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(12.dp))
+                }
+                if (state.importantEmails.isNotEmpty()) {
+                    Text("Important emails", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(8.dp))
+                    state.importantEmails.take(5).forEach { msg ->
+                        ElevatedCard(shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
+                            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(msg.subject() ?: msg.snippet ?: "Email", fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(msg.from() ?: "", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                msg.snippet?.let { Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(12.dp))
+                }
+            }
             if (state.loading) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
             } else if (state.memories.isEmpty()) {
@@ -279,7 +318,19 @@ private fun SearchCard(result: SearchResult) {
 }
 
 @Composable
-private fun SettingsScreen(onError: (String) -> Unit) {
+private fun SettingsScreen(vm: LifeLogViewModel, onError: (String) -> Unit) {
+    val state by vm.state.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val connectedEvent by GoogleState.connectedEvent.collectAsState()
+    LaunchedEffect(Unit) { vm.loadGoogleStatus() }
+    LaunchedEffect(connectedEvent) {
+        if (connectedEvent != null) {
+            vm.loadGoogleStatus()
+            vm.loadUpcomingEvents()
+            vm.loadImportantEmails()
+            GoogleState.consume()
+        }
+    }
     Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
         Text("Settings", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         ElevatedCard(shape = RoundedCornerShape(20.dp)) {
@@ -291,6 +342,22 @@ private fun SettingsScreen(onError: (String) -> Unit) {
                         Text("LifeLog", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
                         Text("Your memories, synced with the web.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                     }
+                }
+            }
+        }
+        ElevatedCard(shape = RoundedCornerShape(20.dp)) {
+            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text("Google account", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.titleMedium)
+                val status = state.googleStatus
+                if (status?.connected == true) {
+                    Text("Connected: ${status.email ?: "Google account"}", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                    Button(onClick = { vm.disconnectGoogle() }) { Text("Disconnect Google") }
+                } else {
+                    Text("Connect Google to see calendar events and important emails.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                    Button(onClick = {
+                        val url = "${Api.baseUrlFlow.value}auth/google?scope=calendar&scope=gmail&mobile=1"
+                        CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(url))
+                    }) { Text("Connect Google") }
                 }
             }
         }
