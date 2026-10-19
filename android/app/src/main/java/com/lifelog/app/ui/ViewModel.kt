@@ -10,6 +10,7 @@ import com.lifelog.app.data.Api
 import com.lifelog.app.data.BriefingParser
 import com.lifelog.app.data.CalendarEvent
 import com.lifelog.app.data.CalendarEventParser
+import com.lifelog.app.data.CalendarListParser
 import com.lifelog.app.data.ChatParser
 import com.lifelog.app.data.ChatRequest
 import com.lifelog.app.data.DailyBriefing
@@ -40,6 +41,7 @@ data class AppState(
     val lastUpload: UploadResponse? = null,
     val googleStatus: GoogleStatus? = null,
     val upcomingEvents: List<CalendarEvent> = emptyList(),
+    val calendarConnected: Boolean = false,
     val importantEmails: List<GmailMessage> = emptyList(),
     val actions: List<ActionItem> = emptyList(),
     val briefing: DailyBriefing? = null,
@@ -92,7 +94,14 @@ class LifeLogViewModel : ViewModel() {
 
     fun loadGoogleStatus() = viewModelScope.launch {
         runCatching { Api.service.googleStatus() }
-            .onSuccess { _state.value = _state.value.copy(googleStatus = GoogleStatusParser.parse(it)) }
+            .onSuccess {
+                val status = GoogleStatusParser.parse(it)
+                _state.value = _state.value.copy(googleStatus = status)
+                if (status.connected) {
+                    loadUpcomingEvents()
+                    loadImportantEmails()
+                }
+            }
     }
 
     fun disconnectGoogle(onDone: () -> Unit = {}, onError: (String) -> Unit = {}) = viewModelScope.launch {
@@ -102,6 +111,7 @@ class LifeLogViewModel : ViewModel() {
                     googleStatus = GoogleStatus(connected = false),
                     upcomingEvents = emptyList(),
                     importantEmails = emptyList(),
+                    calendarConnected = false,
                 )
                 onDone()
             }
@@ -109,10 +119,42 @@ class LifeLogViewModel : ViewModel() {
     }
 
     fun loadUpcomingEvents() = viewModelScope.launch {
-        val now = java.time.Instant.now().toString()
-        val later = java.time.Instant.now().plusSeconds(7 * 24 * 3600).toString()
-        runCatching { Api.service.googleEvents(timeMin = now, timeMax = later) }
-            .onSuccess { _state.value = _state.value.copy(upcomingEvents = CalendarEventParser.parse(it)) }
+        val zone = java.time.ZoneId.systemDefault()
+        val today = java.time.LocalDate.now(zone)
+        val timeMin = today.atStartOfDay(zone).toOffsetDateTime().toString()
+        val timeMax = today.plusDays(30).atTime(23, 59, 59).atZone(zone).toOffsetDateTime().toString()
+
+        // Read every calendar the account exposes, not just "primary", so events
+        // that live on a shared/family calendar are not invisible to the app.
+        val calendars = runCatching { Api.service.googleCalendars() }
+            .map { CalendarListParser.parse(it).filter { c -> c.id.isNotBlank() } }
+            .getOrDefault(emptyList())
+
+        val ids = calendars.map { it.id }.ifEmpty { listOf("primary") }.take(10)
+        val events = ids.flatMap { id ->
+            val name = calendars.firstOrNull { it.id == id }?.summary
+            runCatching {
+                Api.service.googleEvents(calendarId = id, timeMin = timeMin, timeMax = timeMax)
+            }.getOrNull()
+                ?.let { CalendarEventParser.parse(it).map { event -> event.copy(calendar = name) } }
+                ?: emptyList()
+        }
+            .filter { it.summary.isNotBlank() || it.start != null }
+            .sortedBy { it.startInstant?.toEpochMilli() ?: Long.MAX_VALUE }
+            .distinctBy { it.id.ifBlank { "${it.summary}-${it.start}" } }
+
+        _state.value = _state.value.copy(
+            upcomingEvents = events,
+            calendarConnected = _state.value.googleStatus?.connected == true || events.isNotEmpty(),
+        )
+    }
+
+    /** Reloads everything the Today/Memories screens show. */
+    fun refreshHome() = viewModelScope.launch {
+        loadGoogleStatus()
+        loadBriefing()
+        loadActions()
+        loadMemories()
     }
 
     fun loadImportantEmails() = viewModelScope.launch {

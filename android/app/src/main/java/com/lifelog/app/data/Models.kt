@@ -106,6 +106,24 @@ object GoogleStatusParser {
     }
 }
 
+/** A Google calendar the account can read. */
+data class CalendarInfo(
+    val id: String = "",
+    val summary: String = "",
+    val primary: Boolean = false,
+)
+
+object CalendarListParser {
+    fun parse(root: kotlinx.serialization.json.JsonElement): List<CalendarInfo> =
+        Lenient.objectList(root, "calendars", "items", "results").map { obj ->
+            CalendarInfo(
+                id = Lenient.str(obj, "id") ?: "",
+                summary = Lenient.str(obj, "summary", "name") ?: "",
+                primary = Lenient.bool(obj, "primary") ?: false,
+            )
+        }
+}
+
 /** A calendar event. */
 data class CalendarEvent(
     val id: String = "",
@@ -114,7 +132,27 @@ data class CalendarEvent(
     val end: String? = null,
     val location: String? = null,
     val description: String? = null,
-)
+    val calendar: String? = null,
+) {
+    /** Start as an instant, or null for all-day events (date-only values). */
+    val startInstant: java.time.Instant?
+        get() = parseEventInstant(start)
+
+    val allDay: Boolean
+        get() = start != null && start.length == 10
+}
+
+/** Parses an RFC3339 timestamp, or an all-day `YYYY-MM-DD` date. */
+fun parseEventInstant(value: String?): java.time.Instant? {
+    if (value.isNullOrBlank()) return null
+    return runCatching { java.time.Instant.parse(value) }.getOrNull()
+        ?: runCatching { java.time.OffsetDateTime.parse(value).toInstant() }.getOrNull()
+        ?: runCatching {
+            java.time.LocalDate.parse(value)
+                .atStartOfDay(java.time.ZoneId.systemDefault())
+                .toInstant()
+        }.getOrNull()
+}
 
 object CalendarEventParser {
     fun parse(root: kotlinx.serialization.json.JsonElement): List<CalendarEvent> =

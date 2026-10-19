@@ -206,6 +206,12 @@ DELETE /api/google/events/{event_id}?calendar_id=primary -> {"success":true}
 GET    /api/google/freebusy?time_min=…&time_max=… -> {"freebusy":{"calendars":{…}}}
 ```
 
+> **Calendar caveat (verified live):** `/api/google/events` returns an empty
+> `events` list when there are genuinely no events in range, and returns
+> **500** for some secondary calendars (e.g. the read-only "Holidays in India"
+> calendar). The Android app therefore requests each calendar separately and
+> skips any that fail instead of letting one bad calendar blank the screen.
+
 ### Gmail
 ```
 GET  /api/google/messages?query=inbox&max_results=10 -> {"messages":[{"id":"msg1","snippet":"…","payload":{"headers":[…]}}]}

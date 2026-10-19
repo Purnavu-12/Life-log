@@ -25,11 +25,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Settings
@@ -48,6 +50,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -81,6 +84,7 @@ import com.lifelog.app.data.GmailMessage
 import com.lifelog.app.data.LiveEvent
 import com.lifelog.app.data.Memory
 import com.lifelog.app.data.SearchResult
+import com.lifelog.app.data.parseEventInstant
 import kotlinx.coroutines.launch
 
 private data class Destination(val route: String, val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector)
@@ -129,7 +133,7 @@ fun LifeLogApp(nav: NavHostController, vm: LifeLogViewModel = viewModel()) {
         },
     ) { padding ->
         NavHost(nav, "today", Modifier.padding(padding)) {
-            composable("today") { TodayScreen(vm) }
+            composable("today") { TodayScreen(vm, onOpenSettings = { nav.navigate("settings") { launchSingleTop = true } }) }
             composable("home") {
                 HomeScreen(
                     vm,
@@ -158,14 +162,26 @@ fun LifeLogApp(nav: NavHostController, vm: LifeLogViewModel = viewModel()) {
 // ---------------------------------------------------------------------------
 
 @Composable
-private fun TodayScreen(vm: LifeLogViewModel) {
+private fun TodayScreen(vm: LifeLogViewModel, onOpenSettings: () -> Unit) {
     val state by vm.state.collectAsState()
+    val refreshTrigger by GoogleState.refreshTrigger.collectAsState()
     LaunchedEffect(Unit) {
         vm.loadBriefing()
         vm.loadGoogleStatus()
         vm.loadActions()
     }
+    // Re-check when the user returns from the Google sign-in browser tab.
+    LaunchedEffect(refreshTrigger) {
+        if (refreshTrigger > 0) {
+            vm.loadGoogleStatus()
+            vm.loadBriefing()
+        }
+    }
     val briefing = state.briefing
+    // Prefer the aggregated multi-calendar fetch; fall back to the briefing payload.
+    val calendarEvents = state.upcomingEvents.ifEmpty { briefing?.calendar ?: emptyList() }
+    val googleConnected = state.googleStatus?.connected == true
+
     Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
         Spacer(Modifier.height(16.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -176,6 +192,12 @@ private fun TodayScreen(vm: LifeLogViewModel) {
             )
             Spacer(Modifier.width(10.dp))
             Text("Today", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.weight(1f))
+            IconButton(onClick = {
+                vm.loadBriefing()
+                vm.loadGoogleStatus()
+                vm.loadActions()
+            }) { Icon(Icons.Default.Refresh, "Refresh") }
         }
         if (state.briefingLoading && briefing == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
@@ -197,9 +219,19 @@ private fun TodayScreen(vm: LifeLogViewModel) {
                     StatCard("Actions", briefing.pendingActions.toString(), Modifier.weight(1f))
                 }
             }
-            if (briefing.calendar.isNotEmpty()) {
-                item { SectionTitle("Calendar") }
-                itemsIndexed(briefing.calendar) { _, event -> EventCard(event) }
+            item { SectionTitle("Calendar") }
+            if (calendarEvents.isNotEmpty()) {
+                itemsIndexed(calendarEvents, key = { _, event -> "cal-${event.id}-${event.start}" }) { _, event ->
+                    EventCard(event)
+                }
+            } else {
+                item {
+                    if (googleConnected) {
+                        MutedCard("No events in the next 30 days.")
+                    } else {
+                        GooglePromptCard(onOpenSettings)
+                    }
+                }
             }
             if (briefing.importantEmails.isNotEmpty()) {
                 item { SectionTitle("Important emails") }
@@ -214,6 +246,40 @@ private fun TodayScreen(vm: LifeLogViewModel) {
                 itemsIndexed(briefing.memories) { _, memory -> BriefingMemoryCard(memory) }
             }
             item { Spacer(Modifier.height(80.dp)) }
+        }
+    }
+}
+
+@Composable
+private fun MutedCard(text: String) {
+    ElevatedCard(shape = RoundedCornerShape(16.dp)) {
+        Text(
+            text,
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun GooglePromptCard(onOpenSettings: () -> Unit) {
+    ElevatedCard(shape = RoundedCornerShape(16.dp)) {
+        Row(
+            Modifier.fillMaxWidth().padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Icon(Icons.Default.CalendarMonth, null, tint = MaterialTheme.colorScheme.primary)
+            Column(Modifier.weight(1f)) {
+                Text("Google isn't connected", fontWeight = FontWeight.SemiBold)
+                Text(
+                    "Connect Google to see your calendar and important emails.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            TextButton(onClick = onOpenSettings) { Text("Connect") }
         }
     }
 }
@@ -236,14 +302,74 @@ private fun StatCard(label: String, value: String, modifier: Modifier = Modifier
 @Composable
 private fun EventCard(event: CalendarEvent) {
     ElevatedCard(shape = RoundedCornerShape(16.dp)) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(event.summary.ifBlank { "Event" }, fontWeight = FontWeight.SemiBold)
-            event.start?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
-            event.location?.takeIf { it.isNotBlank() }?.let {
-                Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
+        Row(
+            Modifier.fillMaxWidth().padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Box(
+                Modifier.size(40.dp).clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    Icons.Default.CalendarMonth,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(20.dp),
+                )
+            }
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text(
+                    event.summary.ifBlank { "Event" },
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                event.start?.let {
+                    Text(
+                        formatEventTime(event),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                val detail = event.location?.takeIf { it.isNotBlank() }
+                    ?: event.calendar?.takeIf { it.isNotBlank() }
+                detail?.let {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.secondary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
         }
     }
+}
+
+/** "Today · 10:00", "Tomorrow · 14:30", "Fri, 23 Oct · 09:00" or "All day". */
+private fun formatEventTime(event: CalendarEvent): String {
+    val zone = java.time.ZoneId.systemDefault()
+    val instant = event.startInstant ?: return event.start ?: ""
+    val date = instant.atZone(zone).toLocalDate()
+    val today = java.time.LocalDate.now(zone)
+    val dayLabel = when (date) {
+        today -> "Today"
+        today.plusDays(1) -> "Tomorrow"
+        else -> date.format(java.time.format.DateTimeFormatter.ofPattern("EEE, d MMM"))
+    }
+    if (event.allDay) return "$dayLabel · All day"
+    val start = instant.atZone(zone).toLocalTime().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+    val endInstant = parseEventInstant(event.end)
+    if (endInstant != null) {
+        val endDate = endInstant.atZone(zone).toLocalDate()
+        if (endDate == date) {
+            val end = endInstant.atZone(zone).toLocalTime().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+            return "$dayLabel · $start – $end"
+        }
+    }
+    return "$dayLabel · $start"
 }
 
 @Composable
@@ -308,10 +434,17 @@ private fun HomeScreen(vm: LifeLogViewModel, onError: (String) -> Unit, onCaptur
         vm.loadGoogleStatus()
     }
     val state by vm.state.collectAsState()
+    val refreshTrigger by GoogleState.refreshTrigger.collectAsState()
     LaunchedEffect(state.googleStatus?.connected) {
         if (state.googleStatus?.connected == true) {
             vm.loadUpcomingEvents()
             vm.loadImportantEmails()
+        }
+    }
+    LaunchedEffect(refreshTrigger) {
+        if (refreshTrigger > 0) {
+            vm.loadGoogleStatus()
+            vm.loadMemories()
         }
     }
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
@@ -328,7 +461,13 @@ private fun HomeScreen(vm: LifeLogViewModel, onError: (String) -> Unit, onCaptur
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            actions = { IconButton(onClick = onSearch) { Icon(Icons.Default.Search, "Search memories") } },
+            actions = {
+                IconButton(onClick = {
+                    vm.loadMemories()
+                    vm.loadGoogleStatus()
+                }) { Icon(Icons.Default.Refresh, "Refresh") }
+                IconButton(onClick = onSearch) { Icon(Icons.Default.Search, "Search memories") }
+            },
         )
         Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
             Box(
@@ -348,22 +487,27 @@ private fun HomeScreen(vm: LifeLogViewModel, onError: (String) -> Unit, onCaptur
             Spacer(Modifier.height(20.dp))
             if (state.loading) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
-            } else if (state.memories.isEmpty()) {
-                EmptyState(onCapture)
             } else {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    item { SectionTitle("Upcoming events") }
                     if (state.upcomingEvents.isNotEmpty()) {
-                        item { SectionTitle("Upcoming events") }
-                        itemsIndexed(state.upcomingEvents.take(3)) { _, event -> EventCard(event) }
-                        item { Spacer(Modifier.height(4.dp)) }
+                        itemsIndexed(state.upcomingEvents.take(5)) { _, event -> EventCard(event) }
+                    } else if (state.googleStatus?.connected == true) {
+                        item { MutedCard("No events in the next 30 days.") }
+                    } else {
+                        item { MutedCard("Connect Google in Settings to see your calendar.") }
                     }
                     if (state.importantEmails.isNotEmpty()) {
                         item { SectionTitle("Important emails") }
                         itemsIndexed(state.importantEmails.take(3)) { _, mail -> MailCard(mail) }
-                        item { Spacer(Modifier.height(4.dp)) }
                     }
-                    itemsIndexed(state.memories) { _, memory ->
-                        MemoryCard(memory, onDelete = { vm.delete(memory.id, onError) })
+                    if (state.memories.isEmpty()) {
+                        item { EmptyState(onCapture) }
+                    } else {
+                        item { SectionTitle("Memories") }
+                        itemsIndexed(state.memories) { _, memory ->
+                            MemoryCard(memory, onDelete = { vm.delete(memory.id, onError) })
+                        }
                     }
                     item { Spacer(Modifier.height(80.dp)) }
                 }
@@ -723,7 +867,24 @@ private fun SettingsScreen(vm: LifeLogViewModel, onError: (String) -> Unit) {
                 val status = state.googleStatus
                 if (status?.connected == true) {
                     Text("Connected: ${status.email ?: "Google account"}", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
-                    Button(onClick = { vm.disconnectGoogle(onError = onError) }) { Text("Disconnect Google") }
+                    Text(
+                        "Calendar, Gmail and profile access are active.",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedButton(onClick = {
+                            androidx.browser.customtabs.CustomTabsIntent.Builder()
+                                .build()
+                                .launchUrl(context, Uri.parse(Api.googleAuthUrl()))
+                        }) { Text("Switch account") }
+                        TextButton(onClick = { vm.disconnectGoogle(onError = onError) }) { Text("Disconnect") }
+                    }
+                    TextButton(onClick = {
+                        vm.loadGoogleStatus()
+                        vm.loadUpcomingEvents()
+                        vm.loadImportantEmails()
+                    }) { Text("Refresh calendar & mail") }
                 } else {
                     Text("Connect Google to see calendar events and important emails.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                     Button(onClick = {
