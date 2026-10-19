@@ -16,7 +16,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         // Replace this placeholder with the deployed LifeLog server URL before running.
-        buildConfigField("String", "API_BASE_URL", "\"http://172.20.54.164:8000/\"")
+        buildConfigField("String", "API_BASE_URL", "\"https://lifelog-backend-242284331646.us-central1.run.app/\"")
     }
 
     buildTypes {
