@@ -11,6 +11,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
 object EventSocket {
+    private const val TAG = "LifeLogWS"
     private val client = OkHttpClient()
     private var socket: WebSocket? = null
 
@@ -23,26 +24,27 @@ object EventSocket {
     fun connect(baseUrl: String) {
         disconnect()
         val wsUrl = toEventsUrl(baseUrl)
-        Log.d("LifeLogWS", "Connecting to $wsUrl")
+        Log.d(TAG, "Connecting to $wsUrl")
         val request = Request.Builder().url(wsUrl).build()
         socket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
-                Log.d("LifeLogWS", "Connected to $wsUrl")
+                Log.d(TAG, "Connected to $wsUrl")
                 _connected.value = true
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
-                Log.d("LifeLogWS", "Received: $text")
-                val event = EventParser.parse(text)
-                _events.value = listOf(event) + _events.value.take(99)
+                Log.d(TAG, "Received: $text")
+                val event = LiveEventParser.parse(text)
+                _events.value = listOf(event) + _events.value.take(199)
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                Log.d(TAG, "Closed: $code $reason")
                 _connected.value = false
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                Log.e("LifeLogWS", "Failure: ${t.message}", t)
+                Log.e(TAG, "Failure: ${t.message}", t)
                 _connected.value = false
             }
         })
@@ -65,7 +67,7 @@ object EventSocket {
             trimmed.startsWith("http://", ignoreCase = true) -> "ws://" + trimmed.removePrefix("http://")
             trimmed.startsWith("wss://", ignoreCase = true) -> trimmed
             trimmed.startsWith("ws://", ignoreCase = true) -> trimmed
-            else -> "ws://$trimmed"
+            else -> "wss://$trimmed"
         }
         return "$wsBase/events"
     }

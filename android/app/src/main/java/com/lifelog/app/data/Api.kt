@@ -7,12 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -25,45 +27,67 @@ import java.io.IOException
 interface LifeLogService {
     @Multipart
     @POST("api/upload")
-    suspend fun upload(@Part file: MultipartBody.Part): UploadResponse
+    suspend fun upload(@Part file: MultipartBody.Part): JsonElement
 
     @GET("api/memories")
-    suspend fun memories(@Query("limit") limit: Int = 50, @Query("offset") offset: Int = 0): MemoriesResponse
+    suspend fun memories(@Query("limit") limit: Int = 50, @Query("offset") offset: Int = 0): JsonElement
 
     @DELETE("api/memories/{id}")
-    suspend fun delete(@Path("id") id: String)
+    suspend fun delete(@Path("id") id: String): JsonElement
 
     @POST("api/search")
-    suspend fun search(@Query("query") query: String, @Query("threshold") threshold: Double = 0.5): SearchResponse
+    suspend fun search(@Query("query") query: String, @Query("threshold") threshold: Double = 0.5): JsonElement
 
     @GET("auth/google/status")
-    suspend fun googleStatus(): GoogleStatus
+    suspend fun googleStatus(): JsonElement
 
     @POST("auth/google/disconnect")
-    suspend fun googleDisconnect(): SimpleResponse
+    suspend fun googleDisconnect(): JsonElement
 
     @GET("api/google/calendars")
-    suspend fun googleCalendars(): CalendarsResponse
+    suspend fun googleCalendars(): JsonElement
 
     @GET("api/google/events")
     suspend fun googleEvents(
         @Query("calendar_id") calendarId: String = "primary",
         @Query("time_min") timeMin: String? = null,
         @Query("time_max") timeMax: String? = null,
-    ): GoogleEventsResponse
+    ): JsonElement
 
     @GET("api/google/messages/important")
-    suspend fun googleImportantMessages(@Query("max_results") maxResults: Int = 10): GoogleMessagesResponse
+    suspend fun googleImportantMessages(@Query("max_results") maxResults: Int = 10): JsonElement
+
+    @GET("api/google/messages")
+    suspend fun googleMessages(
+        @Query("query") query: String? = null,
+        @Query("max_results") maxResults: Int = 10,
+    ): JsonElement
 
     @GET("api/google/profile")
-    suspend fun googleProfile(): GoogleProfileResponse
+    suspend fun googleProfile(): JsonElement
+
+    @POST("api/chat")
+    suspend fun chat(@Body body: ChatRequest): JsonElement
+
+    @GET("api/dashboard/daily-briefing")
+    suspend fun dailyBriefing(): JsonElement
+
+    @GET("api/dashboard/summary")
+    suspend fun dashboardSummary(): JsonElement
+
+    @GET("api/actions")
+    suspend fun actions(): JsonElement
+
+    @GET("status")
+    suspend fun status(): JsonElement
 }
 
 object Api {
     private const val PREFS_NAME = "lifelog_settings"
     private const val KEY_SERVER_URL = "server_url"
 
-    private val json = Json { ignoreUnknownKeys = true }
+    val json = Json { ignoreUnknownKeys = true; isLenient = true }
+
     private lateinit var prefs: SharedPreferences
 
     private val _baseUrl = MutableStateFlow(normalize(BuildConfig.API_BASE_URL))
@@ -103,7 +127,13 @@ object Api {
 
     suspend fun uploadBytes(name: String, bytes: ByteArray, mime: String): UploadResponse {
         val body = bytes.toRequestBody(mime.toMediaType())
-        return service.upload(MultipartBody.Part.createFormData("file", name, body))
+        return UploadParser.parse(service.upload(MultipartBody.Part.createFormData("file", name, body)))
+    }
+
+    /** URL used to start the Google OAuth flow inside a Custom Tab. */
+    fun googleAuthUrl(): String {
+        val base = _baseUrl.value.trimEnd('/')
+        return "$base/auth/google?scope=calendar,gmail&mobile=1"
     }
 
     private fun normalize(url: String): String {
@@ -116,6 +146,6 @@ object Api {
 }
 
 fun Throwable.userMessage(): String = when (this) {
-    is IOException -> "Could not reach LifeLog. Check the server URL and your connection."
+    is IOException -> "Could not reach LifeLog. Check your connection and try again."
     else -> message?.takeIf { it.isNotBlank() } ?: "Something went wrong. Please try again."
 }

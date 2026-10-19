@@ -1,7 +1,6 @@
 package com.lifelog.app
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,6 +30,14 @@ class MainActivity : ComponentActivity() {
         handleDeepLink(intent)
     }
 
+    override fun onResume() {
+        super.onResume()
+        // The Google OAuth flow completes in a browser tab; on return we refresh
+        // the connection status so the app reflects the new state immediately.
+        handleDeepLink(intent)
+        GoogleState.triggerRefresh()
+    }
+
     private fun handleDeepLink(intent: Intent?) {
         val uri = intent?.data ?: return
         if (uri.scheme == "lifelog" && uri.host == "oauth") {
@@ -39,6 +46,7 @@ class MainActivity : ComponentActivity() {
             if (status == "connected") {
                 GoogleState.markConnected(email)
             }
+            intent.data = null
         }
     }
 }
